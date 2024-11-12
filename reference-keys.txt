@@ -24,3 +24,6 @@ case-2-情感分析
 case-3-主題模型
 case-4-詞性標注
 next-step
+tab:unnamed-chunk-3
+tab:unnamed-chunk-5
+tab:unnamed-chunk-7
