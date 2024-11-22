@@ -1,6 +1,3 @@
-tab:unnamed-chunk-3
-tab:unnamed-chunk-5
-tab:unnamed-chunk-7
 about-this-project
 研究背景與目的
 研究方法
@@ -28,11 +25,12 @@ case-3-主題模型
 case-4-詞性標注
 next-step
 重點回顧
-刪除非英文評論
-文本重清理
+step.1-刪除非英文評論
+step.2-文本再清理
 case-1-詞頻文字雲-1
 case-2-情感分析-1
 case-3-主題模型-1
-變數修正時間按讚數
+step.3-變數修正時間按讚數
+what-now..最新資料視圖
 轉換寬格式的必要
-ml-model-selection
+step.4-ml-model-selection
