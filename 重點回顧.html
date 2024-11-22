@@ -52,6 +52,12 @@
 <link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
 <link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
 <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<link href="libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet" />
+<script src="libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<link href="libs/wordcloud2-0.0.1/wordcloud.css" rel="stylesheet" />
+<script src="libs/wordcloud2-0.0.1/wordcloud2-all.js"></script>
+<script src="libs/wordcloud2-0.0.1/hover.js"></script>
+<script src="libs/wordcloud2-binding-0.2.1/wordcloud2.js"></script>
 
 
 <style type="text/css">
@@ -204,408 +210,408 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1><span class="header-section-number">4</span> 11/22 重點回顧<a href="重點回顧.html#重點回顧" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <div id="刪除非英文評論" class="section level2 hasAnchor" number="4.1">
 <h2><span class="header-section-number">4.1</span> 刪除非英文評論<a href="重點回顧.html#刪除非英文評論" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="重點回顧.html#cb1-1" tabindex="-1"></a><span class="co"># 讀取資料</span></span>
-<span id="cb1-2"><a href="重點回顧.html#cb1-2" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb1-3"><a href="重點回顧.html#cb1-3" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;/Users/liam/Desktop/NTNU/碩二/1131/文字探勘/youtube_comments_with_likes_1114.csv&quot;</span>)</span>
-<span id="cb1-4"><a href="重點回顧.html#cb1-4" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="重點回顧.html#cb1-5" tabindex="-1"></a><span class="co"># 使用正則表達式檢測僅包含英語字母、數字和標點的評論</span></span>
-<span id="cb1-6"><a href="重點回顧.html#cb1-6" tabindex="-1"></a>data_clean <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
-<span id="cb1-7"><a href="重點回顧.html#cb1-7" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">comment =</span> <span class="fu">as.character</span>(comment)) <span class="sc">%&gt;%</span></span>
-<span id="cb1-8"><a href="重點回顧.html#cb1-8" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">grepl</span>(<span class="st">&quot;^[A-Za-z0-9</span><span class="sc">\\</span><span class="st">s.,!?</span><span class="sc">\\</span><span class="st">&#39;</span><span class="sc">\&quot;</span><span class="st">-]+$&quot;</span>, comment))</span>
-<span id="cb1-9"><a href="重點回顧.html#cb1-9" tabindex="-1"></a></span>
-<span id="cb1-10"><a href="重點回顧.html#cb1-10" tabindex="-1"></a><span class="co"># 保存清理後的結果</span></span>
-<span id="cb1-11"><a href="重點回顧.html#cb1-11" tabindex="-1"></a><span class="fu">write.csv</span>(data_clean, <span class="st">&quot;cleaned_youtube_comments.csv&quot;</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb1-12"><a href="重點回顧.html#cb1-12" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="重點回顧.html#cb1-13" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;清理完成，剩餘&quot;</span>, <span class="fu">nrow</span>(data_clean), <span class="st">&quot;條英語系評論。</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb1-14"><a href="重點回顧.html#cb1-14" tabindex="-1"></a></span>
-<span id="cb1-15"><a href="重點回顧.html#cb1-15" tabindex="-1"></a></span>
-<span id="cb1-16"><a href="重點回顧.html#cb1-16" tabindex="-1"></a></span>
-<span id="cb1-17"><a href="重點回顧.html#cb1-17" tabindex="-1"></a></span>
-<span id="cb1-18"><a href="重點回顧.html#cb1-18" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;textcat&quot;</span>)</span>
-<span id="cb1-19"><a href="重點回顧.html#cb1-19" tabindex="-1"></a></span>
-<span id="cb1-20"><a href="重點回顧.html#cb1-20" tabindex="-1"></a><span class="co"># 讀取資料並檢測語言</span></span>
-<span id="cb1-21"><a href="重點回顧.html#cb1-21" tabindex="-1"></a><span class="fu">library</span>(textcat)</span>
-<span id="cb1-22"><a href="重點回顧.html#cb1-22" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;/Users/liam/Desktop/NTNU/碩二/1131/文字探勘/youtube_comments_with_likes_1114.csv&quot;</span>)</span>
-<span id="cb1-23"><a href="重點回顧.html#cb1-23" tabindex="-1"></a></span>
-<span id="cb1-24"><a href="重點回顧.html#cb1-24" tabindex="-1"></a><span class="co"># 檢測評論語言</span></span>
-<span id="cb1-25"><a href="重點回顧.html#cb1-25" tabindex="-1"></a>data_clean <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
-<span id="cb1-26"><a href="重點回顧.html#cb1-26" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">comment =</span> <span class="fu">as.character</span>(comment),</span>
-<span id="cb1-27"><a href="重點回顧.html#cb1-27" tabindex="-1"></a>         <span class="at">language =</span> <span class="fu">textcat</span>(comment)) <span class="sc">%&gt;%</span></span>
-<span id="cb1-28"><a href="重點回顧.html#cb1-28" tabindex="-1"></a>  <span class="fu">filter</span>(language <span class="sc">==</span> <span class="st">&quot;english&quot;</span>)  <span class="co"># 過濾僅包含英語的評論</span></span>
-<span id="cb1-29"><a href="重點回顧.html#cb1-29" tabindex="-1"></a></span>
-<span id="cb1-30"><a href="重點回顧.html#cb1-30" tabindex="-1"></a><span class="co"># 保存清理後的結果</span></span>
-<span id="cb1-31"><a href="重點回顧.html#cb1-31" tabindex="-1"></a><span class="fu">write.csv</span>(data_clean, <span class="st">&quot;cleaned_youtube_comments_t2.csv&quot;</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb1-32"><a href="重點回顧.html#cb1-32" tabindex="-1"></a></span>
-<span id="cb1-33"><a href="重點回顧.html#cb1-33" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;清理完成，剩餘&quot;</span>, <span class="fu">nrow</span>(data_clean), <span class="st">&quot;條英語系評論。</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="重點回顧.html#cb46-1" tabindex="-1"></a><span class="co"># 讀取資料</span></span>
+<span id="cb46-2"><a href="重點回顧.html#cb46-2" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb46-3"><a href="重點回顧.html#cb46-3" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;/Users/liam/Desktop/NTNU/碩二/1131/文字探勘/youtube_comments_with_likes_1114.csv&quot;</span>)</span>
+<span id="cb46-4"><a href="重點回顧.html#cb46-4" tabindex="-1"></a></span>
+<span id="cb46-5"><a href="重點回顧.html#cb46-5" tabindex="-1"></a><span class="co"># 使用正則表達式檢測僅包含英語字母、數字和標點的評論</span></span>
+<span id="cb46-6"><a href="重點回顧.html#cb46-6" tabindex="-1"></a>data_clean <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
+<span id="cb46-7"><a href="重點回顧.html#cb46-7" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">comment =</span> <span class="fu">as.character</span>(comment)) <span class="sc">%&gt;%</span></span>
+<span id="cb46-8"><a href="重點回顧.html#cb46-8" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">grepl</span>(<span class="st">&quot;^[A-Za-z0-9</span><span class="sc">\\</span><span class="st">s.,!?</span><span class="sc">\\</span><span class="st">&#39;</span><span class="sc">\&quot;</span><span class="st">-]+$&quot;</span>, comment))</span>
+<span id="cb46-9"><a href="重點回顧.html#cb46-9" tabindex="-1"></a></span>
+<span id="cb46-10"><a href="重點回顧.html#cb46-10" tabindex="-1"></a><span class="co"># 保存清理後的結果</span></span>
+<span id="cb46-11"><a href="重點回顧.html#cb46-11" tabindex="-1"></a><span class="fu">write.csv</span>(data_clean, <span class="st">&quot;cleaned_youtube_comments.csv&quot;</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb46-12"><a href="重點回顧.html#cb46-12" tabindex="-1"></a></span>
+<span id="cb46-13"><a href="重點回顧.html#cb46-13" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;清理完成，剩餘&quot;</span>, <span class="fu">nrow</span>(data_clean), <span class="st">&quot;條英語系評論。</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb46-14"><a href="重點回顧.html#cb46-14" tabindex="-1"></a></span>
+<span id="cb46-15"><a href="重點回顧.html#cb46-15" tabindex="-1"></a></span>
+<span id="cb46-16"><a href="重點回顧.html#cb46-16" tabindex="-1"></a></span>
+<span id="cb46-17"><a href="重點回顧.html#cb46-17" tabindex="-1"></a></span>
+<span id="cb46-18"><a href="重點回顧.html#cb46-18" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;textcat&quot;</span>)</span>
+<span id="cb46-19"><a href="重點回顧.html#cb46-19" tabindex="-1"></a></span>
+<span id="cb46-20"><a href="重點回顧.html#cb46-20" tabindex="-1"></a><span class="co"># 讀取資料並檢測語言</span></span>
+<span id="cb46-21"><a href="重點回顧.html#cb46-21" tabindex="-1"></a><span class="fu">library</span>(textcat)</span>
+<span id="cb46-22"><a href="重點回顧.html#cb46-22" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;/Users/liam/Desktop/NTNU/碩二/1131/文字探勘/youtube_comments_with_likes_1114.csv&quot;</span>)</span>
+<span id="cb46-23"><a href="重點回顧.html#cb46-23" tabindex="-1"></a></span>
+<span id="cb46-24"><a href="重點回顧.html#cb46-24" tabindex="-1"></a><span class="co"># 檢測評論語言</span></span>
+<span id="cb46-25"><a href="重點回顧.html#cb46-25" tabindex="-1"></a>data_clean <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
+<span id="cb46-26"><a href="重點回顧.html#cb46-26" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">comment =</span> <span class="fu">as.character</span>(comment),</span>
+<span id="cb46-27"><a href="重點回顧.html#cb46-27" tabindex="-1"></a>         <span class="at">language =</span> <span class="fu">textcat</span>(comment)) <span class="sc">%&gt;%</span></span>
+<span id="cb46-28"><a href="重點回顧.html#cb46-28" tabindex="-1"></a>  <span class="fu">filter</span>(language <span class="sc">==</span> <span class="st">&quot;english&quot;</span>)  <span class="co"># 過濾僅包含英語的評論</span></span>
+<span id="cb46-29"><a href="重點回顧.html#cb46-29" tabindex="-1"></a></span>
+<span id="cb46-30"><a href="重點回顧.html#cb46-30" tabindex="-1"></a><span class="co"># 保存清理後的結果</span></span>
+<span id="cb46-31"><a href="重點回顧.html#cb46-31" tabindex="-1"></a><span class="fu">write.csv</span>(data_clean, <span class="st">&quot;cleaned_youtube_comments_t2.csv&quot;</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb46-32"><a href="重點回顧.html#cb46-32" tabindex="-1"></a></span>
+<span id="cb46-33"><a href="重點回顧.html#cb46-33" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;清理完成，剩餘&quot;</span>, <span class="fu">nrow</span>(data_clean), <span class="st">&quot;條英語系評論。</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 </div>
 <div id="文本重清理" class="section level2 hasAnchor" number="4.2">
 <h2><span class="header-section-number">4.2</span> 文本重清理<a href="重點回顧.html#文本重清理" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="重點回顧.html#cb2-1" tabindex="-1"></a><span class="do">## 加載套件</span></span>
-<span id="cb2-2"><a href="重點回顧.html#cb2-2" tabindex="-1"></a><span class="fu">library</span>(tm)</span>
-<span id="cb2-3"><a href="重點回顧.html#cb2-3" tabindex="-1"></a><span class="fu">library</span>(SnowballC)</span>
-<span id="cb2-4"><a href="重點回顧.html#cb2-4" tabindex="-1"></a><span class="fu">library</span>(jiebaR) <span class="co"># 用於中文分詞</span></span>
-<span id="cb2-5"><a href="重點回顧.html#cb2-5" tabindex="-1"></a><span class="fu">library</span>(tidytext)</span>
-<span id="cb2-6"><a href="重點回顧.html#cb2-6" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb2-7"><a href="重點回顧.html#cb2-7" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb2-8"><a href="重點回顧.html#cb2-8" tabindex="-1"></a><span class="fu">library</span>(textstem)</span>
-<span id="cb2-9"><a href="重點回顧.html#cb2-9" tabindex="-1"></a></span>
-<span id="cb2-10"><a href="重點回顧.html#cb2-10" tabindex="-1"></a><span class="co"># 讀取 CSV 文件</span></span>
-<span id="cb2-11"><a href="重點回顧.html#cb2-11" tabindex="-1"></a>file_path <span class="ot">&lt;-</span> <span class="st">&quot;/Users/liam/Desktop/NTNU/碩二/1131/文字探勘/cleaned_youtube_comments_t2.csv&quot;</span></span>
-<span id="cb2-12"><a href="重點回顧.html#cb2-12" tabindex="-1"></a>comments_df <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(file_path)</span>
-<span id="cb2-13"><a href="重點回顧.html#cb2-13" tabindex="-1"></a></span>
-<span id="cb2-14"><a href="重點回顧.html#cb2-14" tabindex="-1"></a><span class="co"># 假設你的 CSV 包含 &#39;comment&#39; 和 &#39;views&#39; 列</span></span>
-<span id="cb2-15"><a href="重點回顧.html#cb2-15" tabindex="-1"></a><span class="co"># 增加 line 編號作為每條評論的唯一標識</span></span>
-<span id="cb2-16"><a href="重點回顧.html#cb2-16" tabindex="-1"></a>comments_df <span class="ot">&lt;-</span> comments_df <span class="sc">%&gt;%</span></span>
-<span id="cb2-17"><a href="重點回顧.html#cb2-17" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">line =</span> <span class="fu">row_number</span>())</span>
-<span id="cb2-18"><a href="重點回顧.html#cb2-18" tabindex="-1"></a></span>
-<span id="cb2-19"><a href="重點回顧.html#cb2-19" tabindex="-1"></a><span class="co"># 清理文本</span></span>
-<span id="cb2-20"><a href="重點回顧.html#cb2-20" tabindex="-1"></a>comments_df<span class="sc">$</span>text <span class="ot">&lt;-</span> <span class="fu">tolower</span>(comments_df<span class="sc">$</span>comment)  <span class="co"># 轉換為小寫</span></span>
-<span id="cb2-21"><a href="重點回顧.html#cb2-21" tabindex="-1"></a>comments_df<span class="sc">$</span>text <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">&quot;[[:punct:]]&quot;</span>, <span class="st">&quot; &quot;</span>, comments_df<span class="sc">$</span>text)  <span class="co"># 移除標點符號</span></span>
-<span id="cb2-22"><a href="重點回顧.html#cb2-22" tabindex="-1"></a>comments_df<span class="sc">$</span>text <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">&quot;[[:digit:]]&quot;</span>, <span class="st">&quot; &quot;</span>, comments_df<span class="sc">$</span>text)  <span class="co"># 移除數字</span></span>
-<span id="cb2-23"><a href="重點回顧.html#cb2-23" tabindex="-1"></a>comments_df<span class="sc">$</span>text <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">&quot;</span><span class="sc">\\</span><span class="st">s+&quot;</span>, <span class="st">&quot; &quot;</span>, comments_df<span class="sc">$</span>text)  <span class="co"># 移除多餘空白</span></span>
-<span id="cb2-24"><a href="重點回顧.html#cb2-24" tabindex="-1"></a></span>
-<span id="cb2-25"><a href="重點回顧.html#cb2-25" tabindex="-1"></a><span class="co"># 將評論拆分為單詞並保留 line 和 views 信息</span></span>
-<span id="cb2-26"><a href="重點回顧.html#cb2-26" tabindex="-1"></a>wordfile <span class="ot">&lt;-</span> comments_df <span class="sc">%&gt;%</span></span>
-<span id="cb2-27"><a href="重點回顧.html#cb2-27" tabindex="-1"></a>  <span class="fu">unnest_tokens</span>(word, text, <span class="at">token =</span> <span class="st">&quot;words&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb2-28"><a href="重點回顧.html#cb2-28" tabindex="-1"></a>  <span class="fu">select</span>(line, word, views, timestamp, likes)</span>
-<span id="cb2-29"><a href="重點回顧.html#cb2-29" tabindex="-1"></a></span>
-<span id="cb2-30"><a href="重點回顧.html#cb2-30" tabindex="-1"></a></span>
-<span id="cb2-31"><a href="重點回顧.html#cb2-31" tabindex="-1"></a><span class="co"># 加載標準停用詞列表</span></span>
-<span id="cb2-32"><a href="重點回顧.html#cb2-32" tabindex="-1"></a>stop_words <span class="ot">&lt;-</span> tidytext<span class="sc">::</span>stop_words</span>
-<span id="cb2-33"><a href="重點回顧.html#cb2-33" tabindex="-1"></a></span>
-<span id="cb2-34"><a href="重點回顧.html#cb2-34" tabindex="-1"></a><span class="co"># 移除停用詞</span></span>
-<span id="cb2-35"><a href="重點回顧.html#cb2-35" tabindex="-1"></a>wordfile <span class="ot">&lt;-</span> wordfile <span class="sc">%&gt;%</span></span>
-<span id="cb2-36"><a href="重點回顧.html#cb2-36" tabindex="-1"></a>  <span class="fu">anti_join</span>(stop_words, <span class="at">by =</span> <span class="st">&quot;word&quot;</span>)</span>
-<span id="cb2-37"><a href="重點回顧.html#cb2-37" tabindex="-1"></a></span>
-<span id="cb2-38"><a href="重點回顧.html#cb2-38" tabindex="-1"></a><span class="co"># 擴展停用詞列表，加入縮寫詞和口語詞</span></span>
-<span id="cb2-39"><a href="重點回顧.html#cb2-39" tabindex="-1"></a>custom_stop_words <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">word =</span> <span class="fu">c</span>(<span class="st">&quot;hai&quot;</span>,<span class="st">&quot;bhai&quot;</span>,<span class="st">&quot;don&quot;</span>,<span class="st">&quot;music&quot;</span>,<span class="st">&quot;listen&quot;</span>,</span>
-<span id="cb2-40"><a href="重點回顧.html#cb2-40" tabindex="-1"></a>                                         <span class="st">&quot;song&quot;</span>,<span class="st">&quot;ina&quot;</span>,<span class="st">&quot;video&quot;</span>,<span class="st">&quot;watch&quot;</span>,<span class="st">&quot;day&quot;</span>,</span>
-<span id="cb2-41"><a href="重點回顧.html#cb2-41" tabindex="-1"></a>                                         <span class="st">&quot;edit&quot;</span>,</span>
-<span id="cb2-42"><a href="重點回顧.html#cb2-42" tabindex="-1"></a>                                         <span class="st">&quot;ve&quot;</span>, <span class="st">&quot;ll&quot;</span>, <span class="st">&quot;na&quot;</span>, <span class="st">&quot;el&quot;</span>, </span>
-<span id="cb2-43"><a href="重點回顧.html#cb2-43" tabindex="-1"></a>                                         <span class="st">&quot;la&quot;</span>, <span class="st">&quot;️️️&quot;</span>, <span class="st">&quot;’ll&quot;</span>, <span class="st">&quot;‘till</span></span>
-<span id="cb2-44"><a href="重點回顧.html#cb2-44" tabindex="-1"></a><span class="st">                                         &quot;</span>, <span class="st">&quot;’ve&quot;</span>, <span class="st">&quot;‘littl&quot;</span>, <span class="st">&quot;’re&quot;</span>, </span>
-<span id="cb2-45"><a href="重點回顧.html#cb2-45" tabindex="-1"></a>                                         <span class="st">&quot;“’m&quot;</span>, <span class="st">&quot;“’re&quot;</span>, <span class="st">&quot;“bon&quot;</span>, </span>
-<span id="cb2-46"><a href="重點回顧.html#cb2-46" tabindex="-1"></a>                                         <span class="st">&quot;“copi&quot;</span>, <span class="st">&quot;“don’t&quot;</span>,<span class="st">&quot;you&quot;</span>,</span>
-<span id="cb2-47"><a href="重點回顧.html#cb2-47" tabindex="-1"></a>                                         <span class="st">&quot;the&quot;</span>, <span class="st">&quot;and&quot;</span>, <span class="st">&quot;you&quot;</span>, <span class="st">&quot;that&quot;</span>, <span class="st">&quot;for&quot;</span>,</span>
-<span id="cb2-48"><a href="重點回顧.html#cb2-48" tabindex="-1"></a>                                         <span class="st">&quot;doesn&quot;</span>,<span class="st">&quot;didn&quot;</span>,<span class="st">&quot;facemoji&quot;</span>,<span class="st">&quot;bio&quot;</span>,</span>
-<span id="cb2-49"><a href="重點回顧.html#cb2-49" tabindex="-1"></a>                                         <span class="st">&quot;interesrting&quot;</span>,<span class="st">&quot;awesomeeee&quot;</span>,<span class="st">&quot;asome&quot;</span>,</span>
-<span id="cb2-50"><a href="重點回顧.html#cb2-50" tabindex="-1"></a>                                         <span class="st">&quot;hardd&quot;</span>,<span class="st">&quot;kocham&quot;</span>,<span class="st">&quot;১ম&quot;</span>,<span class="st">&quot;২০&quot;</span>,<span class="st">&quot;৪০&quot;</span>,<span class="st">&quot;á&quot;</span>,</span>
-<span id="cb2-51"><a href="重點回顧.html#cb2-51" tabindex="-1"></a>                                         <span class="st">&quot;aa&quot;</span>,<span class="st">&quot;aaaaaaaaaaahhhhhhhhhhhh&quot;</span>,</span>
-<span id="cb2-52"><a href="重點回顧.html#cb2-52" tabindex="-1"></a>                                         <span class="st">&quot;aaaaaaaaaaa&quot;</span>,<span class="st">&quot;aaaaaaaaaa&quot;</span>,<span class="st">&quot;aaaaaaaa&quot;</span>,</span>
-<span id="cb2-53"><a href="重點回顧.html#cb2-53" tabindex="-1"></a>                                         <span class="st">&quot;aaa&quot;</span>,<span class="st">&quot;aaaaaah&quot;</span>,<span class="st">&quot;aaaaaand&quot;</span>,<span class="st">&quot;aæaæaæaæaæa&quot;</span>,</span>
-<span id="cb2-54"><a href="重點回顧.html#cb2-54" tabindex="-1"></a>                                         <span class="st">&quot;aaj&quot;</span>,<span class="st">&quot;aaliyah&quot;</span>,<span class="st">&quot;aam&quot;</span>,<span class="st">&quot;aani&quot;</span>,<span class="st">&quot;ab&quot;</span>))</span>
-<span id="cb2-55"><a href="重點回顧.html#cb2-55" tabindex="-1"></a><span class="co"># 移除自定義的停用詞</span></span>
-<span id="cb2-56"><a href="重點回顧.html#cb2-56" tabindex="-1"></a>wordfile <span class="ot">&lt;-</span> wordfile <span class="sc">%&gt;%</span></span>
-<span id="cb2-57"><a href="重點回顧.html#cb2-57" tabindex="-1"></a>  <span class="fu">anti_join</span>(custom_stop_words, <span class="at">by =</span> <span class="st">&quot;word&quot;</span>)</span>
-<span id="cb2-58"><a href="重點回顧.html#cb2-58" tabindex="-1"></a></span>
-<span id="cb2-59"><a href="重點回顧.html#cb2-59" tabindex="-1"></a><span class="co"># 使用 lemmatize_words 進行詞形還原</span></span>
-<span id="cb2-60"><a href="重點回顧.html#cb2-60" tabindex="-1"></a>wordfile<span class="sc">$</span>word <span class="ot">&lt;-</span> <span class="fu">lemmatize_words</span>(wordfile<span class="sc">$</span>word)</span>
-<span id="cb2-61"><a href="重點回顧.html#cb2-61" tabindex="-1"></a></span>
-<span id="cb2-62"><a href="重點回顧.html#cb2-62" tabindex="-1"></a><span class="co"># 移除數字</span></span>
-<span id="cb2-63"><a href="重點回顧.html#cb2-63" tabindex="-1"></a>wordfile <span class="ot">&lt;-</span> wordfile <span class="sc">%&gt;%</span></span>
-<span id="cb2-64"><a href="重點回顧.html#cb2-64" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">grepl</span>(<span class="st">&quot;</span><span class="sc">\\</span><span class="st">d+&quot;</span>, word))</span>
-<span id="cb2-65"><a href="重點回顧.html#cb2-65" tabindex="-1"></a></span>
-<span id="cb2-66"><a href="重點回顧.html#cb2-66" tabindex="-1"></a><span class="co"># 重新計算詞頻</span></span>
-<span id="cb2-67"><a href="重點回顧.html#cb2-67" tabindex="-1"></a>wordfreq <span class="ot">&lt;-</span> <span class="fu">count</span>(wordfile, word, <span class="at">sort =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb2-68"><a href="重點回顧.html#cb2-68" tabindex="-1"></a></span>
-<span id="cb2-69"><a href="重點回顧.html#cb2-69" tabindex="-1"></a><span class="co"># 查看前 20 個最常見的詞</span></span>
-<span id="cb2-70"><a href="重點回顧.html#cb2-70" tabindex="-1"></a>wordfreqdf20 <span class="ot">&lt;-</span> wordfreq[<span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>,]</span>
-<span id="cb2-71"><a href="重點回顧.html#cb2-71" tabindex="-1"></a><span class="co"># 打印結果</span></span>
-<span id="cb2-72"><a href="重點回顧.html#cb2-72" tabindex="-1"></a>wordfreqdf20</span>
-<span id="cb2-73"><a href="重點回顧.html#cb2-73" tabindex="-1"></a></span>
-<span id="cb2-74"><a href="重點回顧.html#cb2-74" tabindex="-1"></a></span>
-<span id="cb2-75"><a href="重點回顧.html#cb2-75" tabindex="-1"></a></span>
-<span id="cb2-76"><a href="重點回顧.html#cb2-76" tabindex="-1"></a><span class="co"># 計算 TF-IDF</span></span>
-<span id="cb2-77"><a href="重點回顧.html#cb2-77" tabindex="-1"></a>wordfile_with_tfidf <span class="ot">&lt;-</span> wordfile <span class="sc">%&gt;%</span></span>
-<span id="cb2-78"><a href="重點回顧.html#cb2-78" tabindex="-1"></a>  <span class="fu">count</span>(line, word, views, timestamp, likes) <span class="sc">%&gt;%</span>  <span class="co"># 計算每行每個單詞的頻率</span></span>
-<span id="cb2-79"><a href="重點回顧.html#cb2-79" tabindex="-1"></a>  <span class="fu">bind_tf_idf</span>(word, line, n)                      <span class="co"># 計算 TF-IDF</span></span>
-<span id="cb2-80"><a href="重點回顧.html#cb2-80" tabindex="-1"></a></span>
-<span id="cb2-81"><a href="重點回顧.html#cb2-81" tabindex="-1"></a></span>
-<span id="cb2-82"><a href="重點回顧.html#cb2-82" tabindex="-1"></a><span class="co"># 查看結果</span></span>
-<span id="cb2-83"><a href="重點回顧.html#cb2-83" tabindex="-1"></a><span class="fu">head</span>(wordfile_with_tfidf)</span></code></pre></div>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="重點回顧.html#cb47-1" tabindex="-1"></a><span class="do">## 加載套件</span></span>
+<span id="cb47-2"><a href="重點回顧.html#cb47-2" tabindex="-1"></a><span class="fu">library</span>(tm)</span>
+<span id="cb47-3"><a href="重點回顧.html#cb47-3" tabindex="-1"></a><span class="fu">library</span>(SnowballC)</span>
+<span id="cb47-4"><a href="重點回顧.html#cb47-4" tabindex="-1"></a><span class="fu">library</span>(jiebaR) <span class="co"># 用於中文分詞</span></span>
+<span id="cb47-5"><a href="重點回顧.html#cb47-5" tabindex="-1"></a><span class="fu">library</span>(tidytext)</span>
+<span id="cb47-6"><a href="重點回顧.html#cb47-6" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb47-7"><a href="重點回顧.html#cb47-7" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb47-8"><a href="重點回顧.html#cb47-8" tabindex="-1"></a><span class="fu">library</span>(textstem)</span>
+<span id="cb47-9"><a href="重點回顧.html#cb47-9" tabindex="-1"></a></span>
+<span id="cb47-10"><a href="重點回顧.html#cb47-10" tabindex="-1"></a><span class="co"># 讀取 CSV 文件</span></span>
+<span id="cb47-11"><a href="重點回顧.html#cb47-11" tabindex="-1"></a>file_path <span class="ot">&lt;-</span> <span class="st">&quot;/Users/liam/Desktop/NTNU/碩二/1131/文字探勘/cleaned_youtube_comments_t2.csv&quot;</span></span>
+<span id="cb47-12"><a href="重點回顧.html#cb47-12" tabindex="-1"></a>comments_df <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(file_path)</span>
+<span id="cb47-13"><a href="重點回顧.html#cb47-13" tabindex="-1"></a></span>
+<span id="cb47-14"><a href="重點回顧.html#cb47-14" tabindex="-1"></a><span class="co"># 假設你的 CSV 包含 &#39;comment&#39; 和 &#39;views&#39; 列</span></span>
+<span id="cb47-15"><a href="重點回顧.html#cb47-15" tabindex="-1"></a><span class="co"># 增加 line 編號作為每條評論的唯一標識</span></span>
+<span id="cb47-16"><a href="重點回顧.html#cb47-16" tabindex="-1"></a>comments_df <span class="ot">&lt;-</span> comments_df <span class="sc">%&gt;%</span></span>
+<span id="cb47-17"><a href="重點回顧.html#cb47-17" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">line =</span> <span class="fu">row_number</span>())</span>
+<span id="cb47-18"><a href="重點回顧.html#cb47-18" tabindex="-1"></a></span>
+<span id="cb47-19"><a href="重點回顧.html#cb47-19" tabindex="-1"></a><span class="co"># 清理文本</span></span>
+<span id="cb47-20"><a href="重點回顧.html#cb47-20" tabindex="-1"></a>comments_df<span class="sc">$</span>text <span class="ot">&lt;-</span> <span class="fu">tolower</span>(comments_df<span class="sc">$</span>comment)  <span class="co"># 轉換為小寫</span></span>
+<span id="cb47-21"><a href="重點回顧.html#cb47-21" tabindex="-1"></a>comments_df<span class="sc">$</span>text <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">&quot;[[:punct:]]&quot;</span>, <span class="st">&quot; &quot;</span>, comments_df<span class="sc">$</span>text)  <span class="co"># 移除標點符號</span></span>
+<span id="cb47-22"><a href="重點回顧.html#cb47-22" tabindex="-1"></a>comments_df<span class="sc">$</span>text <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">&quot;[[:digit:]]&quot;</span>, <span class="st">&quot; &quot;</span>, comments_df<span class="sc">$</span>text)  <span class="co"># 移除數字</span></span>
+<span id="cb47-23"><a href="重點回顧.html#cb47-23" tabindex="-1"></a>comments_df<span class="sc">$</span>text <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">&quot;</span><span class="sc">\\</span><span class="st">s+&quot;</span>, <span class="st">&quot; &quot;</span>, comments_df<span class="sc">$</span>text)  <span class="co"># 移除多餘空白</span></span>
+<span id="cb47-24"><a href="重點回顧.html#cb47-24" tabindex="-1"></a></span>
+<span id="cb47-25"><a href="重點回顧.html#cb47-25" tabindex="-1"></a><span class="co"># 將評論拆分為單詞並保留 line 和 views 信息</span></span>
+<span id="cb47-26"><a href="重點回顧.html#cb47-26" tabindex="-1"></a>wordfile <span class="ot">&lt;-</span> comments_df <span class="sc">%&gt;%</span></span>
+<span id="cb47-27"><a href="重點回顧.html#cb47-27" tabindex="-1"></a>  <span class="fu">unnest_tokens</span>(word, text, <span class="at">token =</span> <span class="st">&quot;words&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb47-28"><a href="重點回顧.html#cb47-28" tabindex="-1"></a>  <span class="fu">select</span>(line, word, views, timestamp, likes)</span>
+<span id="cb47-29"><a href="重點回顧.html#cb47-29" tabindex="-1"></a></span>
+<span id="cb47-30"><a href="重點回顧.html#cb47-30" tabindex="-1"></a></span>
+<span id="cb47-31"><a href="重點回顧.html#cb47-31" tabindex="-1"></a><span class="co"># 加載標準停用詞列表</span></span>
+<span id="cb47-32"><a href="重點回顧.html#cb47-32" tabindex="-1"></a>stop_words <span class="ot">&lt;-</span> tidytext<span class="sc">::</span>stop_words</span>
+<span id="cb47-33"><a href="重點回顧.html#cb47-33" tabindex="-1"></a></span>
+<span id="cb47-34"><a href="重點回顧.html#cb47-34" tabindex="-1"></a><span class="co"># 移除停用詞</span></span>
+<span id="cb47-35"><a href="重點回顧.html#cb47-35" tabindex="-1"></a>wordfile <span class="ot">&lt;-</span> wordfile <span class="sc">%&gt;%</span></span>
+<span id="cb47-36"><a href="重點回顧.html#cb47-36" tabindex="-1"></a>  <span class="fu">anti_join</span>(stop_words, <span class="at">by =</span> <span class="st">&quot;word&quot;</span>)</span>
+<span id="cb47-37"><a href="重點回顧.html#cb47-37" tabindex="-1"></a></span>
+<span id="cb47-38"><a href="重點回顧.html#cb47-38" tabindex="-1"></a><span class="co"># 擴展停用詞列表，加入縮寫詞和口語詞</span></span>
+<span id="cb47-39"><a href="重點回顧.html#cb47-39" tabindex="-1"></a>custom_stop_words <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">word =</span> <span class="fu">c</span>(<span class="st">&quot;hai&quot;</span>,<span class="st">&quot;bhai&quot;</span>,<span class="st">&quot;don&quot;</span>,<span class="st">&quot;music&quot;</span>,<span class="st">&quot;listen&quot;</span>,</span>
+<span id="cb47-40"><a href="重點回顧.html#cb47-40" tabindex="-1"></a>                                         <span class="st">&quot;song&quot;</span>,<span class="st">&quot;ina&quot;</span>,<span class="st">&quot;video&quot;</span>,<span class="st">&quot;watch&quot;</span>,<span class="st">&quot;day&quot;</span>,</span>
+<span id="cb47-41"><a href="重點回顧.html#cb47-41" tabindex="-1"></a>                                         <span class="st">&quot;edit&quot;</span>,</span>
+<span id="cb47-42"><a href="重點回顧.html#cb47-42" tabindex="-1"></a>                                         <span class="st">&quot;ve&quot;</span>, <span class="st">&quot;ll&quot;</span>, <span class="st">&quot;na&quot;</span>, <span class="st">&quot;el&quot;</span>, </span>
+<span id="cb47-43"><a href="重點回顧.html#cb47-43" tabindex="-1"></a>                                         <span class="st">&quot;la&quot;</span>, <span class="st">&quot;️️️&quot;</span>, <span class="st">&quot;’ll&quot;</span>, <span class="st">&quot;‘till</span></span>
+<span id="cb47-44"><a href="重點回顧.html#cb47-44" tabindex="-1"></a><span class="st">                                         &quot;</span>, <span class="st">&quot;’ve&quot;</span>, <span class="st">&quot;‘littl&quot;</span>, <span class="st">&quot;’re&quot;</span>, </span>
+<span id="cb47-45"><a href="重點回顧.html#cb47-45" tabindex="-1"></a>                                         <span class="st">&quot;“’m&quot;</span>, <span class="st">&quot;“’re&quot;</span>, <span class="st">&quot;“bon&quot;</span>, </span>
+<span id="cb47-46"><a href="重點回顧.html#cb47-46" tabindex="-1"></a>                                         <span class="st">&quot;“copi&quot;</span>, <span class="st">&quot;“don’t&quot;</span>,<span class="st">&quot;you&quot;</span>,</span>
+<span id="cb47-47"><a href="重點回顧.html#cb47-47" tabindex="-1"></a>                                         <span class="st">&quot;the&quot;</span>, <span class="st">&quot;and&quot;</span>, <span class="st">&quot;you&quot;</span>, <span class="st">&quot;that&quot;</span>, <span class="st">&quot;for&quot;</span>,</span>
+<span id="cb47-48"><a href="重點回顧.html#cb47-48" tabindex="-1"></a>                                         <span class="st">&quot;doesn&quot;</span>,<span class="st">&quot;didn&quot;</span>,<span class="st">&quot;facemoji&quot;</span>,<span class="st">&quot;bio&quot;</span>,</span>
+<span id="cb47-49"><a href="重點回顧.html#cb47-49" tabindex="-1"></a>                                         <span class="st">&quot;interesrting&quot;</span>,<span class="st">&quot;awesomeeee&quot;</span>,<span class="st">&quot;asome&quot;</span>,</span>
+<span id="cb47-50"><a href="重點回顧.html#cb47-50" tabindex="-1"></a>                                         <span class="st">&quot;hardd&quot;</span>,<span class="st">&quot;kocham&quot;</span>,<span class="st">&quot;১ম&quot;</span>,<span class="st">&quot;২০&quot;</span>,<span class="st">&quot;৪০&quot;</span>,<span class="st">&quot;á&quot;</span>,</span>
+<span id="cb47-51"><a href="重點回顧.html#cb47-51" tabindex="-1"></a>                                         <span class="st">&quot;aa&quot;</span>,<span class="st">&quot;aaaaaaaaaaahhhhhhhhhhhh&quot;</span>,</span>
+<span id="cb47-52"><a href="重點回顧.html#cb47-52" tabindex="-1"></a>                                         <span class="st">&quot;aaaaaaaaaaa&quot;</span>,<span class="st">&quot;aaaaaaaaaa&quot;</span>,<span class="st">&quot;aaaaaaaa&quot;</span>,</span>
+<span id="cb47-53"><a href="重點回顧.html#cb47-53" tabindex="-1"></a>                                         <span class="st">&quot;aaa&quot;</span>,<span class="st">&quot;aaaaaah&quot;</span>,<span class="st">&quot;aaaaaand&quot;</span>,<span class="st">&quot;aæaæaæaæaæa&quot;</span>,</span>
+<span id="cb47-54"><a href="重點回顧.html#cb47-54" tabindex="-1"></a>                                         <span class="st">&quot;aaj&quot;</span>,<span class="st">&quot;aaliyah&quot;</span>,<span class="st">&quot;aam&quot;</span>,<span class="st">&quot;aani&quot;</span>,<span class="st">&quot;ab&quot;</span>))</span>
+<span id="cb47-55"><a href="重點回顧.html#cb47-55" tabindex="-1"></a><span class="co"># 移除自定義的停用詞</span></span>
+<span id="cb47-56"><a href="重點回顧.html#cb47-56" tabindex="-1"></a>wordfile <span class="ot">&lt;-</span> wordfile <span class="sc">%&gt;%</span></span>
+<span id="cb47-57"><a href="重點回顧.html#cb47-57" tabindex="-1"></a>  <span class="fu">anti_join</span>(custom_stop_words, <span class="at">by =</span> <span class="st">&quot;word&quot;</span>)</span>
+<span id="cb47-58"><a href="重點回顧.html#cb47-58" tabindex="-1"></a></span>
+<span id="cb47-59"><a href="重點回顧.html#cb47-59" tabindex="-1"></a><span class="co"># 使用 lemmatize_words 進行詞形還原</span></span>
+<span id="cb47-60"><a href="重點回顧.html#cb47-60" tabindex="-1"></a>wordfile<span class="sc">$</span>word <span class="ot">&lt;-</span> <span class="fu">lemmatize_words</span>(wordfile<span class="sc">$</span>word)</span>
+<span id="cb47-61"><a href="重點回顧.html#cb47-61" tabindex="-1"></a></span>
+<span id="cb47-62"><a href="重點回顧.html#cb47-62" tabindex="-1"></a><span class="co"># 移除數字</span></span>
+<span id="cb47-63"><a href="重點回顧.html#cb47-63" tabindex="-1"></a>wordfile <span class="ot">&lt;-</span> wordfile <span class="sc">%&gt;%</span></span>
+<span id="cb47-64"><a href="重點回顧.html#cb47-64" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">grepl</span>(<span class="st">&quot;</span><span class="sc">\\</span><span class="st">d+&quot;</span>, word))</span>
+<span id="cb47-65"><a href="重點回顧.html#cb47-65" tabindex="-1"></a></span>
+<span id="cb47-66"><a href="重點回顧.html#cb47-66" tabindex="-1"></a><span class="co"># 重新計算詞頻</span></span>
+<span id="cb47-67"><a href="重點回顧.html#cb47-67" tabindex="-1"></a>wordfreq <span class="ot">&lt;-</span> <span class="fu">count</span>(wordfile, word, <span class="at">sort =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb47-68"><a href="重點回顧.html#cb47-68" tabindex="-1"></a></span>
+<span id="cb47-69"><a href="重點回顧.html#cb47-69" tabindex="-1"></a><span class="co"># 查看前 20 個最常見的詞</span></span>
+<span id="cb47-70"><a href="重點回顧.html#cb47-70" tabindex="-1"></a>wordfreqdf20 <span class="ot">&lt;-</span> wordfreq[<span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>,]</span>
+<span id="cb47-71"><a href="重點回顧.html#cb47-71" tabindex="-1"></a><span class="co"># 打印結果</span></span>
+<span id="cb47-72"><a href="重點回顧.html#cb47-72" tabindex="-1"></a>wordfreqdf20</span>
+<span id="cb47-73"><a href="重點回顧.html#cb47-73" tabindex="-1"></a></span>
+<span id="cb47-74"><a href="重點回顧.html#cb47-74" tabindex="-1"></a></span>
+<span id="cb47-75"><a href="重點回顧.html#cb47-75" tabindex="-1"></a></span>
+<span id="cb47-76"><a href="重點回顧.html#cb47-76" tabindex="-1"></a><span class="co"># 計算 TF-IDF</span></span>
+<span id="cb47-77"><a href="重點回顧.html#cb47-77" tabindex="-1"></a>wordfile_with_tfidf <span class="ot">&lt;-</span> wordfile <span class="sc">%&gt;%</span></span>
+<span id="cb47-78"><a href="重點回顧.html#cb47-78" tabindex="-1"></a>  <span class="fu">count</span>(line, word, views, timestamp, likes) <span class="sc">%&gt;%</span>  <span class="co"># 計算每行每個單詞的頻率</span></span>
+<span id="cb47-79"><a href="重點回顧.html#cb47-79" tabindex="-1"></a>  <span class="fu">bind_tf_idf</span>(word, line, n)                      <span class="co"># 計算 TF-IDF</span></span>
+<span id="cb47-80"><a href="重點回顧.html#cb47-80" tabindex="-1"></a></span>
+<span id="cb47-81"><a href="重點回顧.html#cb47-81" tabindex="-1"></a></span>
+<span id="cb47-82"><a href="重點回顧.html#cb47-82" tabindex="-1"></a><span class="co"># 查看結果</span></span>
+<span id="cb47-83"><a href="重點回顧.html#cb47-83" tabindex="-1"></a><span class="fu">head</span>(wordfile_with_tfidf)</span></code></pre></div>
 </div>
 <div id="變數修正時間按讚數" class="section level2 hasAnchor" number="4.3">
 <h2><span class="header-section-number">4.3</span> 變數修正（時間&amp;按讚數）<a href="重點回顧.html#變數修正時間按讚數" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="重點回顧.html#cb3-1" tabindex="-1"></a><span class="co"># 創建清理 timestamp 的函數</span></span>
-<span id="cb3-2"><a href="重點回顧.html#cb3-2" tabindex="-1"></a>clean_timestamp <span class="ot">&lt;-</span> <span class="cf">function</span>(timestamp) {</span>
-<span id="cb3-3"><a href="重點回顧.html#cb3-3" tabindex="-1"></a>  <span class="co"># 移除 &quot;(已編輯)&quot; 的內容</span></span>
-<span id="cb3-4"><a href="重點回顧.html#cb3-4" tabindex="-1"></a>  timestamp <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">&quot;</span><span class="sc">\\</span><span class="st">(已編輯</span><span class="sc">\\</span><span class="st">)&quot;</span>, <span class="st">&quot;&quot;</span>, timestamp)</span>
-<span id="cb3-5"><a href="重點回顧.html#cb3-5" tabindex="-1"></a>  </span>
-<span id="cb3-6"><a href="重點回顧.html#cb3-6" tabindex="-1"></a>  <span class="co"># 處理不同的時間單位，並轉換為天數</span></span>
-<span id="cb3-7"><a href="重點回顧.html#cb3-7" tabindex="-1"></a>  timestamp_days <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(</span>
-<span id="cb3-8"><a href="重點回顧.html#cb3-8" tabindex="-1"></a>    <span class="fu">grepl</span>(<span class="st">&quot;年前&quot;</span>, timestamp),</span>
-<span id="cb3-9"><a href="重點回顧.html#cb3-9" tabindex="-1"></a>    <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">&quot;年前&quot;</span>, <span class="st">&quot;&quot;</span>, timestamp)) <span class="sc">*</span> <span class="dv">365</span>,  <span class="co"># 年轉換為天</span></span>
-<span id="cb3-10"><a href="重點回顧.html#cb3-10" tabindex="-1"></a>    <span class="fu">ifelse</span>(</span>
-<span id="cb3-11"><a href="重點回顧.html#cb3-11" tabindex="-1"></a>      <span class="fu">grepl</span>(<span class="st">&quot;個月前&quot;</span>, timestamp),</span>
-<span id="cb3-12"><a href="重點回顧.html#cb3-12" tabindex="-1"></a>      <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">&quot;個月前&quot;</span>, <span class="st">&quot;&quot;</span>, timestamp)) <span class="sc">*</span> <span class="dv">30</span>,  <span class="co"># 月轉換為天</span></span>
-<span id="cb3-13"><a href="重點回顧.html#cb3-13" tabindex="-1"></a>      <span class="fu">ifelse</span>(</span>
-<span id="cb3-14"><a href="重點回顧.html#cb3-14" tabindex="-1"></a>        <span class="fu">grepl</span>(<span class="st">&quot;週前&quot;</span>, timestamp),</span>
-<span id="cb3-15"><a href="重點回顧.html#cb3-15" tabindex="-1"></a>        <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">&quot;週前&quot;</span>, <span class="st">&quot;&quot;</span>, timestamp)) <span class="sc">*</span> <span class="dv">7</span>,  <span class="co"># 週轉換為天</span></span>
-<span id="cb3-16"><a href="重點回顧.html#cb3-16" tabindex="-1"></a>        <span class="fu">ifelse</span>(</span>
-<span id="cb3-17"><a href="重點回顧.html#cb3-17" tabindex="-1"></a>          <span class="fu">grepl</span>(<span class="st">&quot;天前&quot;</span>, timestamp),</span>
-<span id="cb3-18"><a href="重點回顧.html#cb3-18" tabindex="-1"></a>          <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">&quot;天前&quot;</span>, <span class="st">&quot;&quot;</span>, timestamp)),  <span class="co"># 天保持不變</span></span>
-<span id="cb3-19"><a href="重點回顧.html#cb3-19" tabindex="-1"></a>          <span class="dv">0</span>  <span class="co"># 無法識別的時間，預設為 0</span></span>
-<span id="cb3-20"><a href="重點回顧.html#cb3-20" tabindex="-1"></a>        )</span>
-<span id="cb3-21"><a href="重點回顧.html#cb3-21" tabindex="-1"></a>      )</span>
-<span id="cb3-22"><a href="重點回顧.html#cb3-22" tabindex="-1"></a>    )</span>
-<span id="cb3-23"><a href="重點回顧.html#cb3-23" tabindex="-1"></a>  )</span>
-<span id="cb3-24"><a href="重點回顧.html#cb3-24" tabindex="-1"></a>  </span>
-<span id="cb3-25"><a href="重點回顧.html#cb3-25" tabindex="-1"></a>  <span class="fu">return</span>(timestamp_days)</span>
-<span id="cb3-26"><a href="重點回顧.html#cb3-26" tabindex="-1"></a>}</span>
-<span id="cb3-27"><a href="重點回顧.html#cb3-27" tabindex="-1"></a></span>
-<span id="cb3-28"><a href="重點回顧.html#cb3-28" tabindex="-1"></a></span>
-<span id="cb3-29"><a href="重點回顧.html#cb3-29" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb3-30"><a href="重點回顧.html#cb3-30" tabindex="-1"></a></span>
-<span id="cb3-31"><a href="重點回顧.html#cb3-31" tabindex="-1"></a><span class="co"># 將 timestamp 轉換為統一的天數</span></span>
-<span id="cb3-32"><a href="重點回顧.html#cb3-32" tabindex="-1"></a>wordfile_with_tfidf <span class="ot">&lt;-</span> wordfile_with_tfidf <span class="sc">%&gt;%</span></span>
-<span id="cb3-33"><a href="重點回顧.html#cb3-33" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb3-34"><a href="重點回顧.html#cb3-34" tabindex="-1"></a>    <span class="at">timestamp_days =</span> <span class="fu">clean_timestamp</span>(timestamp)  <span class="co"># 新增統一格式的天數欄位</span></span>
-<span id="cb3-35"><a href="重點回顧.html#cb3-35" tabindex="-1"></a>  )</span>
-<span id="cb3-36"><a href="重點回顧.html#cb3-36" tabindex="-1"></a></span>
-<span id="cb3-37"><a href="重點回顧.html#cb3-37" tabindex="-1"></a></span>
-<span id="cb3-38"><a href="重點回顧.html#cb3-38" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb3-39"><a href="重點回顧.html#cb3-39" tabindex="-1"></a></span>
-<span id="cb3-40"><a href="重點回顧.html#cb3-40" tabindex="-1"></a><span class="co"># 檢查哪些值轉換後是 NA</span></span>
-<span id="cb3-41"><a href="重點回顧.html#cb3-41" tabindex="-1"></a>problematic_likes <span class="ot">&lt;-</span> wordfile_with_tfidf <span class="sc">%&gt;%</span></span>
-<span id="cb3-42"><a href="重點回顧.html#cb3-42" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">is.na</span>(<span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">&quot;萬&quot;</span>, <span class="st">&quot;&quot;</span>, likes)))) <span class="sc">%&gt;%</span></span>
-<span id="cb3-43"><a href="重點回顧.html#cb3-43" tabindex="-1"></a>  <span class="fu">select</span>(likes) <span class="sc">%&gt;%</span></span>
-<span id="cb3-44"><a href="重點回顧.html#cb3-44" tabindex="-1"></a>  <span class="fu">distinct</span>()</span>
-<span id="cb3-45"><a href="重點回顧.html#cb3-45" tabindex="-1"></a></span>
-<span id="cb3-46"><a href="重點回顧.html#cb3-46" tabindex="-1"></a>wordfile_with_tfidf <span class="ot">&lt;-</span> wordfile_with_tfidf <span class="sc">%&gt;%</span></span>
-<span id="cb3-47"><a href="重點回顧.html#cb3-47" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">likes =</span> <span class="fu">case_when</span>(</span>
-<span id="cb3-48"><a href="重點回顧.html#cb3-48" tabindex="-1"></a>    <span class="fu">grepl</span>(<span class="st">&quot;^</span><span class="sc">\\</span><span class="st">d+(</span><span class="sc">\\</span><span class="st">.</span><span class="sc">\\</span><span class="st">d+)?萬$&quot;</span>, likes) <span class="sc">~</span> <span class="fu">as.numeric</span>(<span class="fu">sub</span>(<span class="st">&quot;萬&quot;</span>, <span class="st">&quot;&quot;</span>, likes)) <span class="sc">*</span> <span class="dv">10000</span>, <span class="co"># 處理「X萬」格式</span></span>
-<span id="cb3-49"><a href="重點回顧.html#cb3-49" tabindex="-1"></a>    <span class="fu">grepl</span>(<span class="st">&quot;^</span><span class="sc">\\</span><span class="st">d+$&quot;</span>, likes) <span class="sc">~</span> <span class="fu">as.numeric</span>(likes),                                   <span class="co"># 處理純數字</span></span>
-<span id="cb3-50"><a href="重點回顧.html#cb3-50" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="cn">NA_real_</span>                                                              <span class="co"># 其他情況設為 NA</span></span>
-<span id="cb3-51"><a href="重點回顧.html#cb3-51" tabindex="-1"></a>  ))</span>
-<span id="cb3-52"><a href="重點回顧.html#cb3-52" tabindex="-1"></a></span>
-<span id="cb3-53"><a href="重點回顧.html#cb3-53" tabindex="-1"></a></span>
-<span id="cb3-54"><a href="重點回顧.html#cb3-54" tabindex="-1"></a><span class="co"># 檢查轉換後的結果</span></span>
-<span id="cb3-55"><a href="重點回顧.html#cb3-55" tabindex="-1"></a><span class="fu">head</span>(wordfile_with_tfidf<span class="sc">$</span>likes)</span>
-<span id="cb3-56"><a href="重點回顧.html#cb3-56" tabindex="-1"></a></span>
-<span id="cb3-57"><a href="重點回顧.html#cb3-57" tabindex="-1"></a></span>
-<span id="cb3-58"><a href="重點回顧.html#cb3-58" tabindex="-1"></a></span>
-<span id="cb3-59"><a href="重點回顧.html#cb3-59" tabindex="-1"></a><span class="co"># 假設 wordfile_with_tfidf 已經存在於 R 環境中</span></span>
-<span id="cb3-60"><a href="重點回顧.html#cb3-60" tabindex="-1"></a>output_path <span class="ot">&lt;-</span> <span class="st">&quot;/Users/liam/Desktop/NTNU/碩二/1131/文字探勘/wordfile_with_tfidf.csv&quot;</span></span>
-<span id="cb3-61"><a href="重點回顧.html#cb3-61" tabindex="-1"></a></span>
-<span id="cb3-62"><a href="重點回顧.html#cb3-62" tabindex="-1"></a><span class="co"># 將資料框寫入 CSV 檔案</span></span>
-<span id="cb3-63"><a href="重點回顧.html#cb3-63" tabindex="-1"></a><span class="fu">write.csv</span>(wordfile_with_tfidf, <span class="at">file =</span> output_path, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb3-64"><a href="重點回顧.html#cb3-64" tabindex="-1"></a></span>
-<span id="cb3-65"><a href="重點回顧.html#cb3-65" tabindex="-1"></a><span class="co"># 確認輸出</span></span>
-<span id="cb3-66"><a href="重點回顧.html#cb3-66" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;檔案已輸出至：&quot;</span>, output_path)</span></code></pre></div>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="重點回顧.html#cb48-1" tabindex="-1"></a><span class="co"># 創建清理 timestamp 的函數</span></span>
+<span id="cb48-2"><a href="重點回顧.html#cb48-2" tabindex="-1"></a>clean_timestamp <span class="ot">&lt;-</span> <span class="cf">function</span>(timestamp) {</span>
+<span id="cb48-3"><a href="重點回顧.html#cb48-3" tabindex="-1"></a>  <span class="co"># 移除 &quot;(已編輯)&quot; 的內容</span></span>
+<span id="cb48-4"><a href="重點回顧.html#cb48-4" tabindex="-1"></a>  timestamp <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">&quot;</span><span class="sc">\\</span><span class="st">(已編輯</span><span class="sc">\\</span><span class="st">)&quot;</span>, <span class="st">&quot;&quot;</span>, timestamp)</span>
+<span id="cb48-5"><a href="重點回顧.html#cb48-5" tabindex="-1"></a>  </span>
+<span id="cb48-6"><a href="重點回顧.html#cb48-6" tabindex="-1"></a>  <span class="co"># 處理不同的時間單位，並轉換為天數</span></span>
+<span id="cb48-7"><a href="重點回顧.html#cb48-7" tabindex="-1"></a>  timestamp_days <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(</span>
+<span id="cb48-8"><a href="重點回顧.html#cb48-8" tabindex="-1"></a>    <span class="fu">grepl</span>(<span class="st">&quot;年前&quot;</span>, timestamp),</span>
+<span id="cb48-9"><a href="重點回顧.html#cb48-9" tabindex="-1"></a>    <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">&quot;年前&quot;</span>, <span class="st">&quot;&quot;</span>, timestamp)) <span class="sc">*</span> <span class="dv">365</span>,  <span class="co"># 年轉換為天</span></span>
+<span id="cb48-10"><a href="重點回顧.html#cb48-10" tabindex="-1"></a>    <span class="fu">ifelse</span>(</span>
+<span id="cb48-11"><a href="重點回顧.html#cb48-11" tabindex="-1"></a>      <span class="fu">grepl</span>(<span class="st">&quot;個月前&quot;</span>, timestamp),</span>
+<span id="cb48-12"><a href="重點回顧.html#cb48-12" tabindex="-1"></a>      <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">&quot;個月前&quot;</span>, <span class="st">&quot;&quot;</span>, timestamp)) <span class="sc">*</span> <span class="dv">30</span>,  <span class="co"># 月轉換為天</span></span>
+<span id="cb48-13"><a href="重點回顧.html#cb48-13" tabindex="-1"></a>      <span class="fu">ifelse</span>(</span>
+<span id="cb48-14"><a href="重點回顧.html#cb48-14" tabindex="-1"></a>        <span class="fu">grepl</span>(<span class="st">&quot;週前&quot;</span>, timestamp),</span>
+<span id="cb48-15"><a href="重點回顧.html#cb48-15" tabindex="-1"></a>        <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">&quot;週前&quot;</span>, <span class="st">&quot;&quot;</span>, timestamp)) <span class="sc">*</span> <span class="dv">7</span>,  <span class="co"># 週轉換為天</span></span>
+<span id="cb48-16"><a href="重點回顧.html#cb48-16" tabindex="-1"></a>        <span class="fu">ifelse</span>(</span>
+<span id="cb48-17"><a href="重點回顧.html#cb48-17" tabindex="-1"></a>          <span class="fu">grepl</span>(<span class="st">&quot;天前&quot;</span>, timestamp),</span>
+<span id="cb48-18"><a href="重點回顧.html#cb48-18" tabindex="-1"></a>          <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">&quot;天前&quot;</span>, <span class="st">&quot;&quot;</span>, timestamp)),  <span class="co"># 天保持不變</span></span>
+<span id="cb48-19"><a href="重點回顧.html#cb48-19" tabindex="-1"></a>          <span class="dv">0</span>  <span class="co"># 無法識別的時間，預設為 0</span></span>
+<span id="cb48-20"><a href="重點回顧.html#cb48-20" tabindex="-1"></a>        )</span>
+<span id="cb48-21"><a href="重點回顧.html#cb48-21" tabindex="-1"></a>      )</span>
+<span id="cb48-22"><a href="重點回顧.html#cb48-22" tabindex="-1"></a>    )</span>
+<span id="cb48-23"><a href="重點回顧.html#cb48-23" tabindex="-1"></a>  )</span>
+<span id="cb48-24"><a href="重點回顧.html#cb48-24" tabindex="-1"></a>  </span>
+<span id="cb48-25"><a href="重點回顧.html#cb48-25" tabindex="-1"></a>  <span class="fu">return</span>(timestamp_days)</span>
+<span id="cb48-26"><a href="重點回顧.html#cb48-26" tabindex="-1"></a>}</span>
+<span id="cb48-27"><a href="重點回顧.html#cb48-27" tabindex="-1"></a></span>
+<span id="cb48-28"><a href="重點回顧.html#cb48-28" tabindex="-1"></a></span>
+<span id="cb48-29"><a href="重點回顧.html#cb48-29" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb48-30"><a href="重點回顧.html#cb48-30" tabindex="-1"></a></span>
+<span id="cb48-31"><a href="重點回顧.html#cb48-31" tabindex="-1"></a><span class="co"># 將 timestamp 轉換為統一的天數</span></span>
+<span id="cb48-32"><a href="重點回顧.html#cb48-32" tabindex="-1"></a>wordfile_with_tfidf <span class="ot">&lt;-</span> wordfile_with_tfidf <span class="sc">%&gt;%</span></span>
+<span id="cb48-33"><a href="重點回顧.html#cb48-33" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb48-34"><a href="重點回顧.html#cb48-34" tabindex="-1"></a>    <span class="at">timestamp_days =</span> <span class="fu">clean_timestamp</span>(timestamp)  <span class="co"># 新增統一格式的天數欄位</span></span>
+<span id="cb48-35"><a href="重點回顧.html#cb48-35" tabindex="-1"></a>  )</span>
+<span id="cb48-36"><a href="重點回顧.html#cb48-36" tabindex="-1"></a></span>
+<span id="cb48-37"><a href="重點回顧.html#cb48-37" tabindex="-1"></a></span>
+<span id="cb48-38"><a href="重點回顧.html#cb48-38" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb48-39"><a href="重點回顧.html#cb48-39" tabindex="-1"></a></span>
+<span id="cb48-40"><a href="重點回顧.html#cb48-40" tabindex="-1"></a><span class="co"># 檢查哪些值轉換後是 NA</span></span>
+<span id="cb48-41"><a href="重點回顧.html#cb48-41" tabindex="-1"></a>problematic_likes <span class="ot">&lt;-</span> wordfile_with_tfidf <span class="sc">%&gt;%</span></span>
+<span id="cb48-42"><a href="重點回顧.html#cb48-42" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">is.na</span>(<span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">&quot;萬&quot;</span>, <span class="st">&quot;&quot;</span>, likes)))) <span class="sc">%&gt;%</span></span>
+<span id="cb48-43"><a href="重點回顧.html#cb48-43" tabindex="-1"></a>  <span class="fu">select</span>(likes) <span class="sc">%&gt;%</span></span>
+<span id="cb48-44"><a href="重點回顧.html#cb48-44" tabindex="-1"></a>  <span class="fu">distinct</span>()</span>
+<span id="cb48-45"><a href="重點回顧.html#cb48-45" tabindex="-1"></a></span>
+<span id="cb48-46"><a href="重點回顧.html#cb48-46" tabindex="-1"></a>wordfile_with_tfidf <span class="ot">&lt;-</span> wordfile_with_tfidf <span class="sc">%&gt;%</span></span>
+<span id="cb48-47"><a href="重點回顧.html#cb48-47" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">likes =</span> <span class="fu">case_when</span>(</span>
+<span id="cb48-48"><a href="重點回顧.html#cb48-48" tabindex="-1"></a>    <span class="fu">grepl</span>(<span class="st">&quot;^</span><span class="sc">\\</span><span class="st">d+(</span><span class="sc">\\</span><span class="st">.</span><span class="sc">\\</span><span class="st">d+)?萬$&quot;</span>, likes) <span class="sc">~</span> <span class="fu">as.numeric</span>(<span class="fu">sub</span>(<span class="st">&quot;萬&quot;</span>, <span class="st">&quot;&quot;</span>, likes)) <span class="sc">*</span> <span class="dv">10000</span>, <span class="co"># 處理「X萬」格式</span></span>
+<span id="cb48-49"><a href="重點回顧.html#cb48-49" tabindex="-1"></a>    <span class="fu">grepl</span>(<span class="st">&quot;^</span><span class="sc">\\</span><span class="st">d+$&quot;</span>, likes) <span class="sc">~</span> <span class="fu">as.numeric</span>(likes),                                   <span class="co"># 處理純數字</span></span>
+<span id="cb48-50"><a href="重點回顧.html#cb48-50" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="cn">NA_real_</span>                                                              <span class="co"># 其他情況設為 NA</span></span>
+<span id="cb48-51"><a href="重點回顧.html#cb48-51" tabindex="-1"></a>  ))</span>
+<span id="cb48-52"><a href="重點回顧.html#cb48-52" tabindex="-1"></a></span>
+<span id="cb48-53"><a href="重點回顧.html#cb48-53" tabindex="-1"></a></span>
+<span id="cb48-54"><a href="重點回顧.html#cb48-54" tabindex="-1"></a><span class="co"># 檢查轉換後的結果</span></span>
+<span id="cb48-55"><a href="重點回顧.html#cb48-55" tabindex="-1"></a><span class="fu">head</span>(wordfile_with_tfidf<span class="sc">$</span>likes)</span>
+<span id="cb48-56"><a href="重點回顧.html#cb48-56" tabindex="-1"></a></span>
+<span id="cb48-57"><a href="重點回顧.html#cb48-57" tabindex="-1"></a></span>
+<span id="cb48-58"><a href="重點回顧.html#cb48-58" tabindex="-1"></a></span>
+<span id="cb48-59"><a href="重點回顧.html#cb48-59" tabindex="-1"></a><span class="co"># 假設 wordfile_with_tfidf 已經存在於 R 環境中</span></span>
+<span id="cb48-60"><a href="重點回顧.html#cb48-60" tabindex="-1"></a>output_path <span class="ot">&lt;-</span> <span class="st">&quot;/Users/liam/Desktop/NTNU/碩二/1131/文字探勘/wordfile_with_tfidf.csv&quot;</span></span>
+<span id="cb48-61"><a href="重點回顧.html#cb48-61" tabindex="-1"></a></span>
+<span id="cb48-62"><a href="重點回顧.html#cb48-62" tabindex="-1"></a><span class="co"># 將資料框寫入 CSV 檔案</span></span>
+<span id="cb48-63"><a href="重點回顧.html#cb48-63" tabindex="-1"></a><span class="fu">write.csv</span>(wordfile_with_tfidf, <span class="at">file =</span> output_path, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb48-64"><a href="重點回顧.html#cb48-64" tabindex="-1"></a></span>
+<span id="cb48-65"><a href="重點回顧.html#cb48-65" tabindex="-1"></a><span class="co"># 確認輸出</span></span>
+<span id="cb48-66"><a href="重點回顧.html#cb48-66" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;檔案已輸出至：&quot;</span>, output_path)</span></code></pre></div>
 </div>
 <div id="轉換寬格式的必要" class="section level2 hasAnchor" number="4.4">
 <h2><span class="header-section-number">4.4</span> 轉換寬格式的必要？<a href="重點回顧.html#轉換寬格式的必要" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="重點回顧.html#cb4-1" tabindex="-1"></a><span class="co"># 載入套件</span></span>
-<span id="cb4-2"><a href="重點回顧.html#cb4-2" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb4-3"><a href="重點回顧.html#cb4-3" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
-<span id="cb4-4"><a href="重點回顧.html#cb4-4" tabindex="-1"></a></span>
-<span id="cb4-5"><a href="重點回顧.html#cb4-5" tabindex="-1"></a><span class="co"># 讀取資料</span></span>
-<span id="cb4-6"><a href="重點回顧.html#cb4-6" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;/Users/liam/Desktop/NTNU/碩二/1131/文字探勘/wordfile_with_tfidf.csv&quot;</span>, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb4-7"><a href="重點回顧.html#cb4-7" tabindex="-1"></a></span>
-<span id="cb4-8"><a href="重點回顧.html#cb4-8" tabindex="-1"></a>data <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
-<span id="cb4-9"><a href="重點回顧.html#cb4-9" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">line_id =</span> line)</span>
-<span id="cb4-10"><a href="重點回顧.html#cb4-10" tabindex="-1"></a></span>
-<span id="cb4-11"><a href="重點回顧.html#cb4-11" tabindex="-1"></a><span class="co"># 資料預處理</span></span>
-<span id="cb4-12"><a href="重點回顧.html#cb4-12" tabindex="-1"></a>data<span class="sc">$</span>line_id <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(data<span class="sc">$</span>line_id)</span>
-<span id="cb4-13"><a href="重點回顧.html#cb4-13" tabindex="-1"></a>data<span class="sc">$</span>word <span class="ot">&lt;-</span> <span class="fu">as.character</span>(data<span class="sc">$</span>word)</span>
-<span id="cb4-14"><a href="重點回顧.html#cb4-14" tabindex="-1"></a></span>
-<span id="cb4-15"><a href="重點回顧.html#cb4-15" tabindex="-1"></a><span class="co"># 將資料轉換為寬格式（詞彙矩陣）</span></span>
-<span id="cb4-16"><a href="重點回顧.html#cb4-16" tabindex="-1"></a>tf_idf_matrix <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
-<span id="cb4-17"><a href="重點回顧.html#cb4-17" tabindex="-1"></a>  <span class="fu">select</span>(line_id, word, tf_idf) <span class="sc">%&gt;%</span></span>
-<span id="cb4-18"><a href="重點回顧.html#cb4-18" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(</span>
-<span id="cb4-19"><a href="重點回顧.html#cb4-19" tabindex="-1"></a>    <span class="at">names_from =</span> word,</span>
-<span id="cb4-20"><a href="重點回顧.html#cb4-20" tabindex="-1"></a>    <span class="at">values_from =</span> tf_idf,</span>
-<span id="cb4-21"><a href="重點回顧.html#cb4-21" tabindex="-1"></a>    <span class="at">values_fill =</span> <span class="fu">list</span>(<span class="at">tf_idf =</span> <span class="dv">0</span>)</span>
-<span id="cb4-22"><a href="重點回顧.html#cb4-22" tabindex="-1"></a>  )</span>
-<span id="cb4-23"><a href="重點回顧.html#cb4-23" tabindex="-1"></a></span>
-<span id="cb4-24"><a href="重點回顧.html#cb4-24" tabindex="-1"></a><span class="co"># 提取每則留言的其他特徵</span></span>
-<span id="cb4-25"><a href="重點回顧.html#cb4-25" tabindex="-1"></a>other_features <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
-<span id="cb4-26"><a href="重點回顧.html#cb4-26" tabindex="-1"></a>  <span class="fu">group_by</span>(line_id) <span class="sc">%&gt;%</span></span>
-<span id="cb4-27"><a href="重點回顧.html#cb4-27" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
-<span id="cb4-28"><a href="重點回顧.html#cb4-28" tabindex="-1"></a>    <span class="at">views =</span> <span class="fu">first</span>(views),</span>
-<span id="cb4-29"><a href="重點回顧.html#cb4-29" tabindex="-1"></a>    <span class="at">likes =</span> <span class="fu">first</span>(likes),</span>
-<span id="cb4-30"><a href="重點回顧.html#cb4-30" tabindex="-1"></a>    <span class="at">timestamp =</span> <span class="fu">first</span>(timestamp),</span>
-<span id="cb4-31"><a href="重點回顧.html#cb4-31" tabindex="-1"></a>    <span class="at">timestamp_days =</span> <span class="fu">first</span>(timestamp_days)</span>
-<span id="cb4-32"><a href="重點回顧.html#cb4-32" tabindex="-1"></a>  )</span>
-<span id="cb4-33"><a href="重點回顧.html#cb4-33" tabindex="-1"></a></span>
-<span id="cb4-34"><a href="重點回顧.html#cb4-34" tabindex="-1"></a><span class="co"># 合併詞彙矩陣與其他特徵</span></span>
-<span id="cb4-35"><a href="重點回顧.html#cb4-35" tabindex="-1"></a>final_data <span class="ot">&lt;-</span> tf_idf_matrix <span class="sc">%&gt;%</span></span>
-<span id="cb4-36"><a href="重點回顧.html#cb4-36" tabindex="-1"></a>  <span class="fu">left_join</span>(other_features, <span class="at">by =</span> <span class="st">&quot;line_id&quot;</span>)</span>
-<span id="cb4-37"><a href="重點回顧.html#cb4-37" tabindex="-1"></a></span>
-<span id="cb4-38"><a href="重點回顧.html#cb4-38" tabindex="-1"></a><span class="co"># 處理缺失值</span></span>
-<span id="cb4-39"><a href="重點回顧.html#cb4-39" tabindex="-1"></a>final_data<span class="sc">$</span>likes[<span class="fu">is.na</span>(final_data<span class="sc">$</span>likes)] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb4-40"><a href="重點回顧.html#cb4-40" tabindex="-1"></a></span>
-<span id="cb4-41"><a href="重點回顧.html#cb4-41" tabindex="-1"></a></span>
-<span id="cb4-42"><a href="重點回顧.html#cb4-42" tabindex="-1"></a></span>
-<span id="cb4-43"><a href="重點回顧.html#cb4-43" tabindex="-1"></a><span class="co"># 设置观看次数的上限</span></span>
-<span id="cb4-44"><a href="重點回顧.html#cb4-44" tabindex="-1"></a>upper_limit <span class="ot">&lt;-</span> <span class="dv">10000000</span>  <span class="co"># 1000 万</span></span>
-<span id="cb4-45"><a href="重點回顧.html#cb4-45" tabindex="-1"></a><span class="co"># 对观看次数进行截断</span></span>
-<span id="cb4-46"><a href="重點回顧.html#cb4-46" tabindex="-1"></a>final_data <span class="ot">&lt;-</span> final_data <span class="sc">%&gt;%</span></span>
-<span id="cb4-47"><a href="重點回顧.html#cb4-47" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">views_capped =</span> <span class="fu">ifelse</span>(views <span class="sc">&gt;</span> upper_limit, upper_limit, views))</span>
-<span id="cb4-48"><a href="重點回顧.html#cb4-48" tabindex="-1"></a><span class="co"># 过滤数据</span></span>
-<span id="cb4-49"><a href="重點回顧.html#cb4-49" tabindex="-1"></a>final_data_filtered <span class="ot">&lt;-</span> final_data <span class="sc">%&gt;%</span></span>
-<span id="cb4-50"><a href="重點回顧.html#cb4-50" tabindex="-1"></a>  <span class="fu">filter</span>(views <span class="sc">&lt;=</span> upper_limit)</span>
-<span id="cb4-51"><a href="重點回顧.html#cb4-51" tabindex="-1"></a></span>
-<span id="cb4-52"><a href="重點回顧.html#cb4-52" tabindex="-1"></a><span class="co"># 檢視最終的資料集</span></span>
-<span id="cb4-53"><a href="重點回顧.html#cb4-53" tabindex="-1"></a><span class="fu">head</span>(final_data)</span></code></pre></div>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="重點回顧.html#cb49-1" tabindex="-1"></a><span class="co"># 載入套件</span></span>
+<span id="cb49-2"><a href="重點回顧.html#cb49-2" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb49-3"><a href="重點回顧.html#cb49-3" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb49-4"><a href="重點回顧.html#cb49-4" tabindex="-1"></a></span>
+<span id="cb49-5"><a href="重點回顧.html#cb49-5" tabindex="-1"></a><span class="co"># 讀取資料</span></span>
+<span id="cb49-6"><a href="重點回顧.html#cb49-6" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;/Users/liam/Desktop/NTNU/碩二/1131/文字探勘/wordfile_with_tfidf.csv&quot;</span>, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb49-7"><a href="重點回顧.html#cb49-7" tabindex="-1"></a></span>
+<span id="cb49-8"><a href="重點回顧.html#cb49-8" tabindex="-1"></a>data <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
+<span id="cb49-9"><a href="重點回顧.html#cb49-9" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">line_id =</span> line)</span>
+<span id="cb49-10"><a href="重點回顧.html#cb49-10" tabindex="-1"></a></span>
+<span id="cb49-11"><a href="重點回顧.html#cb49-11" tabindex="-1"></a><span class="co"># 資料預處理</span></span>
+<span id="cb49-12"><a href="重點回顧.html#cb49-12" tabindex="-1"></a>data<span class="sc">$</span>line_id <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(data<span class="sc">$</span>line_id)</span>
+<span id="cb49-13"><a href="重點回顧.html#cb49-13" tabindex="-1"></a>data<span class="sc">$</span>word <span class="ot">&lt;-</span> <span class="fu">as.character</span>(data<span class="sc">$</span>word)</span>
+<span id="cb49-14"><a href="重點回顧.html#cb49-14" tabindex="-1"></a></span>
+<span id="cb49-15"><a href="重點回顧.html#cb49-15" tabindex="-1"></a><span class="co"># 將資料轉換為寬格式（詞彙矩陣）</span></span>
+<span id="cb49-16"><a href="重點回顧.html#cb49-16" tabindex="-1"></a>tf_idf_matrix <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
+<span id="cb49-17"><a href="重點回顧.html#cb49-17" tabindex="-1"></a>  <span class="fu">select</span>(line_id, word, tf_idf) <span class="sc">%&gt;%</span></span>
+<span id="cb49-18"><a href="重點回顧.html#cb49-18" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(</span>
+<span id="cb49-19"><a href="重點回顧.html#cb49-19" tabindex="-1"></a>    <span class="at">names_from =</span> word,</span>
+<span id="cb49-20"><a href="重點回顧.html#cb49-20" tabindex="-1"></a>    <span class="at">values_from =</span> tf_idf,</span>
+<span id="cb49-21"><a href="重點回顧.html#cb49-21" tabindex="-1"></a>    <span class="at">values_fill =</span> <span class="fu">list</span>(<span class="at">tf_idf =</span> <span class="dv">0</span>)</span>
+<span id="cb49-22"><a href="重點回顧.html#cb49-22" tabindex="-1"></a>  )</span>
+<span id="cb49-23"><a href="重點回顧.html#cb49-23" tabindex="-1"></a></span>
+<span id="cb49-24"><a href="重點回顧.html#cb49-24" tabindex="-1"></a><span class="co"># 提取每則留言的其他特徵</span></span>
+<span id="cb49-25"><a href="重點回顧.html#cb49-25" tabindex="-1"></a>other_features <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
+<span id="cb49-26"><a href="重點回顧.html#cb49-26" tabindex="-1"></a>  <span class="fu">group_by</span>(line_id) <span class="sc">%&gt;%</span></span>
+<span id="cb49-27"><a href="重點回顧.html#cb49-27" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb49-28"><a href="重點回顧.html#cb49-28" tabindex="-1"></a>    <span class="at">views =</span> <span class="fu">first</span>(views),</span>
+<span id="cb49-29"><a href="重點回顧.html#cb49-29" tabindex="-1"></a>    <span class="at">likes =</span> <span class="fu">first</span>(likes),</span>
+<span id="cb49-30"><a href="重點回顧.html#cb49-30" tabindex="-1"></a>    <span class="at">timestamp =</span> <span class="fu">first</span>(timestamp),</span>
+<span id="cb49-31"><a href="重點回顧.html#cb49-31" tabindex="-1"></a>    <span class="at">timestamp_days =</span> <span class="fu">first</span>(timestamp_days)</span>
+<span id="cb49-32"><a href="重點回顧.html#cb49-32" tabindex="-1"></a>  )</span>
+<span id="cb49-33"><a href="重點回顧.html#cb49-33" tabindex="-1"></a></span>
+<span id="cb49-34"><a href="重點回顧.html#cb49-34" tabindex="-1"></a><span class="co"># 合併詞彙矩陣與其他特徵</span></span>
+<span id="cb49-35"><a href="重點回顧.html#cb49-35" tabindex="-1"></a>final_data <span class="ot">&lt;-</span> tf_idf_matrix <span class="sc">%&gt;%</span></span>
+<span id="cb49-36"><a href="重點回顧.html#cb49-36" tabindex="-1"></a>  <span class="fu">left_join</span>(other_features, <span class="at">by =</span> <span class="st">&quot;line_id&quot;</span>)</span>
+<span id="cb49-37"><a href="重點回顧.html#cb49-37" tabindex="-1"></a></span>
+<span id="cb49-38"><a href="重點回顧.html#cb49-38" tabindex="-1"></a><span class="co"># 處理缺失值</span></span>
+<span id="cb49-39"><a href="重點回顧.html#cb49-39" tabindex="-1"></a>final_data<span class="sc">$</span>likes[<span class="fu">is.na</span>(final_data<span class="sc">$</span>likes)] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb49-40"><a href="重點回顧.html#cb49-40" tabindex="-1"></a></span>
+<span id="cb49-41"><a href="重點回顧.html#cb49-41" tabindex="-1"></a></span>
+<span id="cb49-42"><a href="重點回顧.html#cb49-42" tabindex="-1"></a></span>
+<span id="cb49-43"><a href="重點回顧.html#cb49-43" tabindex="-1"></a><span class="co"># 设置观看次数的上限</span></span>
+<span id="cb49-44"><a href="重點回顧.html#cb49-44" tabindex="-1"></a>upper_limit <span class="ot">&lt;-</span> <span class="dv">10000000</span>  <span class="co"># 1000 万</span></span>
+<span id="cb49-45"><a href="重點回顧.html#cb49-45" tabindex="-1"></a><span class="co"># 对观看次数进行截断</span></span>
+<span id="cb49-46"><a href="重點回顧.html#cb49-46" tabindex="-1"></a>final_data <span class="ot">&lt;-</span> final_data <span class="sc">%&gt;%</span></span>
+<span id="cb49-47"><a href="重點回顧.html#cb49-47" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">views_capped =</span> <span class="fu">ifelse</span>(views <span class="sc">&gt;</span> upper_limit, upper_limit, views))</span>
+<span id="cb49-48"><a href="重點回顧.html#cb49-48" tabindex="-1"></a><span class="co"># 过滤数据</span></span>
+<span id="cb49-49"><a href="重點回顧.html#cb49-49" tabindex="-1"></a>final_data_filtered <span class="ot">&lt;-</span> final_data <span class="sc">%&gt;%</span></span>
+<span id="cb49-50"><a href="重點回顧.html#cb49-50" tabindex="-1"></a>  <span class="fu">filter</span>(views <span class="sc">&lt;=</span> upper_limit)</span>
+<span id="cb49-51"><a href="重點回顧.html#cb49-51" tabindex="-1"></a></span>
+<span id="cb49-52"><a href="重點回顧.html#cb49-52" tabindex="-1"></a><span class="co"># 檢視最終的資料集</span></span>
+<span id="cb49-53"><a href="重點回顧.html#cb49-53" tabindex="-1"></a><span class="fu">head</span>(final_data)</span></code></pre></div>
 </div>
 <div id="ml-model-selection" class="section level2 hasAnchor" number="4.5">
 <h2><span class="header-section-number">4.5</span> ML model selection<a href="重點回顧.html#ml-model-selection" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="重點回顧.html#cb5-1" tabindex="-1"></a><span class="do">#######################################################</span></span>
-<span id="cb5-2"><a href="重點回顧.html#cb5-2" tabindex="-1"></a><span class="do">## 長格式資料、不tune</span></span>
-<span id="cb5-3"><a href="重點回顧.html#cb5-3" tabindex="-1"></a><span class="do">#######################################################</span></span>
-<span id="cb5-4"><a href="重點回顧.html#cb5-4" tabindex="-1"></a></span>
-<span id="cb5-5"><a href="重點回顧.html#cb5-5" tabindex="-1"></a><span class="co"># 載入必要的套件</span></span>
-<span id="cb5-6"><a href="重點回顧.html#cb5-6" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb5-7"><a href="重點回顧.html#cb5-7" tabindex="-1"></a><span class="fu">library</span>(tidymodels)</span>
-<span id="cb5-8"><a href="重點回顧.html#cb5-8" tabindex="-1"></a><span class="fu">library</span>(textrecipes)</span>
-<span id="cb5-9"><a href="重點回顧.html#cb5-9" tabindex="-1"></a></span>
-<span id="cb5-10"><a href="重點回顧.html#cb5-10" tabindex="-1"></a><span class="co"># 假設您的資料已讀取，並命名為 data</span></span>
-<span id="cb5-11"><a href="重點回顧.html#cb5-11" tabindex="-1"></a><span class="co"># 資料包含以下欄位：line_id, word, views, timestamp, likes, n, tf, idf, tf_idf, timestamp_days</span></span>
-<span id="cb5-12"><a href="重點回顧.html#cb5-12" tabindex="-1"></a></span>
-<span id="cb5-13"><a href="重點回顧.html#cb5-13" tabindex="-1"></a><span class="co"># 定義觀看次數的區間和對應的分類</span></span>
-<span id="cb5-14"><a href="重點回顧.html#cb5-14" tabindex="-1"></a>recode_views <span class="ot">&lt;-</span> <span class="cf">function</span>(views) {</span>
-<span id="cb5-15"><a href="重點回顧.html#cb5-15" tabindex="-1"></a>  <span class="cf">if</span> (views <span class="sc">&gt;=</span> <span class="dv">500000</span> <span class="sc">&amp;</span> views <span class="sc">&lt;</span> <span class="dv">1000000</span>) {</span>
-<span id="cb5-16"><a href="重點回顧.html#cb5-16" tabindex="-1"></a>    <span class="fu">return</span>(<span class="dv">1</span>)</span>
-<span id="cb5-17"><a href="重點回顧.html#cb5-17" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (views <span class="sc">&gt;=</span> <span class="dv">1000000</span> <span class="sc">&amp;</span> views <span class="sc">&lt;</span> <span class="dv">2000000</span>) {</span>
-<span id="cb5-18"><a href="重點回顧.html#cb5-18" tabindex="-1"></a>    <span class="fu">return</span>(<span class="dv">2</span>)</span>
-<span id="cb5-19"><a href="重點回顧.html#cb5-19" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (views <span class="sc">&gt;=</span> <span class="dv">2000000</span> <span class="sc">&amp;</span> views <span class="sc">&lt;</span> <span class="dv">4000000</span>) {</span>
-<span id="cb5-20"><a href="重點回顧.html#cb5-20" tabindex="-1"></a>    <span class="fu">return</span>(<span class="dv">3</span>)</span>
-<span id="cb5-21"><a href="重點回顧.html#cb5-21" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (views <span class="sc">&gt;=</span> <span class="dv">4000000</span> <span class="sc">&amp;</span> views <span class="sc">&lt;</span> <span class="dv">5000000</span>) {</span>
-<span id="cb5-22"><a href="重點回顧.html#cb5-22" tabindex="-1"></a>    <span class="fu">return</span>(<span class="dv">4</span>)</span>
-<span id="cb5-23"><a href="重點回顧.html#cb5-23" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (views <span class="sc">&gt;=</span> <span class="dv">5000000</span> <span class="sc">&amp;</span> views <span class="sc">&lt;</span> <span class="dv">6000000</span>) {</span>
-<span id="cb5-24"><a href="重點回顧.html#cb5-24" tabindex="-1"></a>    <span class="fu">return</span>(<span class="dv">5</span>)</span>
-<span id="cb5-25"><a href="重點回顧.html#cb5-25" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (views <span class="sc">&gt;=</span> <span class="dv">7000000</span> <span class="sc">&amp;</span> views <span class="sc">&lt;</span> <span class="dv">8000000</span>) {</span>
-<span id="cb5-26"><a href="重點回顧.html#cb5-26" tabindex="-1"></a>    <span class="fu">return</span>(<span class="dv">6</span>)</span>
-<span id="cb5-27"><a href="重點回顧.html#cb5-27" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (views <span class="sc">&gt;=</span> <span class="dv">8000000</span> <span class="sc">&amp;</span> views <span class="sc">&lt;</span> <span class="dv">9000000</span>) {</span>
-<span id="cb5-28"><a href="重點回顧.html#cb5-28" tabindex="-1"></a>    <span class="fu">return</span>(<span class="dv">7</span>)</span>
-<span id="cb5-29"><a href="重點回顧.html#cb5-29" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (views <span class="sc">&gt;=</span> <span class="dv">9000000</span> <span class="sc">&amp;</span> views <span class="sc">&lt;</span> <span class="dv">10000000</span>) {</span>
-<span id="cb5-30"><a href="重點回顧.html#cb5-30" tabindex="-1"></a>    <span class="fu">return</span>(<span class="dv">8</span>)</span>
-<span id="cb5-31"><a href="重點回顧.html#cb5-31" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (views <span class="sc">&gt;=</span> <span class="dv">10000000</span> <span class="sc">&amp;</span> views <span class="sc">&lt;</span> <span class="dv">15000000</span>) {</span>
-<span id="cb5-32"><a href="重點回顧.html#cb5-32" tabindex="-1"></a>    <span class="fu">return</span>(<span class="dv">9</span>)</span>
-<span id="cb5-33"><a href="重點回顧.html#cb5-33" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (views <span class="sc">&gt;=</span> <span class="dv">15000000</span>) {</span>
-<span id="cb5-34"><a href="重點回顧.html#cb5-34" tabindex="-1"></a>    <span class="fu">return</span>(<span class="dv">10</span>)</span>
-<span id="cb5-35"><a href="重點回顧.html#cb5-35" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
-<span id="cb5-36"><a href="重點回顧.html#cb5-36" tabindex="-1"></a>    <span class="fu">return</span>(<span class="cn">NA</span>)</span>
-<span id="cb5-37"><a href="重點回顧.html#cb5-37" tabindex="-1"></a>  }</span>
-<span id="cb5-38"><a href="重點回顧.html#cb5-38" tabindex="-1"></a>}</span>
-<span id="cb5-39"><a href="重點回顧.html#cb5-39" tabindex="-1"></a></span>
-<span id="cb5-40"><a href="重點回顧.html#cb5-40" tabindex="-1"></a><span class="co"># 應用編碼函數並移除缺失值</span></span>
-<span id="cb5-41"><a href="重點回顧.html#cb5-41" tabindex="-1"></a>data <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
-<span id="cb5-42"><a href="重點回顧.html#cb5-42" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">views_category =</span> <span class="fu">sapply</span>(views, recode_views)) <span class="sc">%&gt;%</span></span>
-<span id="cb5-43"><a href="重點回顧.html#cb5-43" tabindex="-1"></a>  <span class="fu">drop_na</span>(views_category) <span class="sc">%&gt;%</span></span>
-<span id="cb5-44"><a href="重點回顧.html#cb5-44" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">views_category =</span> <span class="fu">factor</span>(views_category))  <span class="co"># 將目標變數轉換為因子</span></span>
-<span id="cb5-45"><a href="重點回顧.html#cb5-45" tabindex="-1"></a></span>
-<span id="cb5-46"><a href="重點回顧.html#cb5-46" tabindex="-1"></a><span class="co"># 處理數值型特徵，將 likes 和 timestamp_days 轉換為數值型，並處理缺失值</span></span>
-<span id="cb5-47"><a href="重點回顧.html#cb5-47" tabindex="-1"></a>data <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
-<span id="cb5-48"><a href="重點回顧.html#cb5-48" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb5-49"><a href="重點回顧.html#cb5-49" tabindex="-1"></a>    <span class="at">likes =</span> <span class="fu">as.numeric</span>(likes),</span>
-<span id="cb5-50"><a href="重點回顧.html#cb5-50" tabindex="-1"></a>    <span class="at">likes =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(likes), <span class="dv">0</span>, likes),</span>
-<span id="cb5-51"><a href="重點回顧.html#cb5-51" tabindex="-1"></a>    <span class="at">timestamp_days =</span> <span class="fu">as.numeric</span>(timestamp_days),</span>
-<span id="cb5-52"><a href="重點回顧.html#cb5-52" tabindex="-1"></a>    <span class="at">timestamp_days =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(timestamp_days), <span class="dv">0</span>, timestamp_days)</span>
-<span id="cb5-53"><a href="重點回顧.html#cb5-53" tabindex="-1"></a>  )</span>
-<span id="cb5-54"><a href="重點回顧.html#cb5-54" tabindex="-1"></a></span>
-<span id="cb5-55"><a href="重點回顧.html#cb5-55" tabindex="-1"></a><span class="co"># 分割資料（確保每個 line_id 只出現在訓練或測試集之一）</span></span>
-<span id="cb5-56"><a href="重點回顧.html#cb5-56" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
-<span id="cb5-57"><a href="重點回顧.html#cb5-57" tabindex="-1"></a>line_ids <span class="ot">&lt;-</span> <span class="fu">unique</span>(data<span class="sc">$</span>line_id)</span>
-<span id="cb5-58"><a href="重點回顧.html#cb5-58" tabindex="-1"></a>train_ids <span class="ot">&lt;-</span> <span class="fu">sample</span>(line_ids, <span class="at">size =</span> <span class="fl">0.7</span> <span class="sc">*</span> <span class="fu">length</span>(line_ids))</span>
-<span id="cb5-59"><a href="重點回顧.html#cb5-59" tabindex="-1"></a>train_data <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(line_id <span class="sc">%in%</span> train_ids)</span>
-<span id="cb5-60"><a href="重點回顧.html#cb5-60" tabindex="-1"></a>test_data <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="sc">!</span>line_id <span class="sc">%in%</span> train_ids)</span>
-<span id="cb5-61"><a href="重點回顧.html#cb5-61" tabindex="-1"></a></span>
-<span id="cb5-62"><a href="重點回顧.html#cb5-62" tabindex="-1"></a>train_data <span class="ot">&lt;-</span> train_data <span class="sc">%&gt;%</span></span>
-<span id="cb5-63"><a href="重點回顧.html#cb5-63" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(tf, idf, timestamp, views))</span>
-<span id="cb5-64"><a href="重點回顧.html#cb5-64" tabindex="-1"></a></span>
-<span id="cb5-65"><a href="重點回顧.html#cb5-65" tabindex="-1"></a></span>
-<span id="cb5-66"><a href="重點回顧.html#cb5-66" tabindex="-1"></a>ml_recipe <span class="ot">&lt;-</span> <span class="fu">recipe</span>(views_category <span class="sc">~</span> word , <span class="at">data =</span> train_data) <span class="sc">%&gt;%</span></span>
-<span id="cb5-67"><a href="重點回顧.html#cb5-67" tabindex="-1"></a>  <span class="fu">step_dummy</span>(<span class="fu">all_nominal_predictors</span>(), <span class="sc">-</span><span class="fu">all_outcomes</span>()) <span class="sc">%&gt;%</span></span>
-<span id="cb5-68"><a href="重點回顧.html#cb5-68" tabindex="-1"></a>  <span class="fu">step_normalize</span>(<span class="fu">all_numeric_predictors</span>())</span>
-<span id="cb5-69"><a href="重點回顧.html#cb5-69" tabindex="-1"></a></span>
-<span id="cb5-70"><a href="重點回顧.html#cb5-70" tabindex="-1"></a></span>
-<span id="cb5-71"><a href="重點回顧.html#cb5-71" tabindex="-1"></a>ml_recipe <span class="ot">&lt;-</span> <span class="fu">recipe</span>(views_category <span class="sc">~</span> word <span class="sc">+</span> tf_idf , <span class="at">data =</span> train_data) <span class="sc">%&gt;%</span></span>
-<span id="cb5-72"><a href="重點回顧.html#cb5-72" tabindex="-1"></a>  <span class="co"># 移除不必要的欄位（若有）</span></span>
-<span id="cb5-73"><a href="重點回顧.html#cb5-73" tabindex="-1"></a>  <span class="fu">step_other</span>(word, <span class="at">threshold =</span> <span class="fl">0.01</span>) <span class="sc">%&gt;%</span>       <span class="co"># 將出現頻率低於1%的詞彙歸類為 &quot;other&quot;</span></span>
-<span id="cb5-74"><a href="重點回顧.html#cb5-74" tabindex="-1"></a>  <span class="fu">step_dummy</span>(word) <span class="sc">%&gt;%</span>                         <span class="co"># 將 &#39;word&#39; 轉換為虛擬變數</span></span>
-<span id="cb5-75"><a href="重點回顧.html#cb5-75" tabindex="-1"></a>  <span class="fu">step_normalize</span>(<span class="fu">all_numeric_predictors</span>())    <span class="co"># 標準化數值型預測變數</span></span>
-<span id="cb5-76"><a href="重點回顧.html#cb5-76" tabindex="-1"></a></span>
-<span id="cb5-77"><a href="重點回顧.html#cb5-77" tabindex="-1"></a><span class="co"># 檢查配方是否正確</span></span>
-<span id="cb5-78"><a href="重點回顧.html#cb5-78" tabindex="-1"></a><span class="fu">prep</span>(ml_recipe, <span class="at">training =</span> train_data) <span class="sc">%&gt;%</span> <span class="fu">juice</span>() <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span>
-<span id="cb5-79"><a href="重點回顧.html#cb5-79" tabindex="-1"></a></span>
-<span id="cb5-80"><a href="重點回顧.html#cb5-80" tabindex="-1"></a><span class="co"># 建立模型規格（未調參）</span></span>
-<span id="cb5-81"><a href="重點回顧.html#cb5-81" tabindex="-1"></a>lasso_spec <span class="ot">&lt;-</span> <span class="fu">multinom_reg</span>(<span class="at">penalty =</span> <span class="fl">0.1</span>, <span class="at">mixture =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span>  <span class="co"># LASSO 邏輯回歸</span></span>
-<span id="cb5-82"><a href="重點回顧.html#cb5-82" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">&quot;glmnet&quot;</span>)</span>
-<span id="cb5-83"><a href="重點回顧.html#cb5-83" tabindex="-1"></a></span>
-<span id="cb5-84"><a href="重點回顧.html#cb5-84" tabindex="-1"></a>svm_spec <span class="ot">&lt;-</span> <span class="fu">svm_linear</span>(<span class="at">cost =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span>                        <span class="co"># 線性 SVM</span></span>
-<span id="cb5-85"><a href="重點回顧.html#cb5-85" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">&quot;classification&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb5-86"><a href="重點回顧.html#cb5-86" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">&quot;LiblineaR&quot;</span>)</span>
-<span id="cb5-87"><a href="重點回顧.html#cb5-87" tabindex="-1"></a></span>
-<span id="cb5-88"><a href="重點回顧.html#cb5-88" tabindex="-1"></a>null_spec <span class="ot">&lt;-</span> <span class="fu">null_model</span>() <span class="sc">%&gt;%</span>                               <span class="co"># Null 模型</span></span>
-<span id="cb5-89"><a href="重點回顧.html#cb5-89" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">&quot;classification&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb5-90"><a href="重點回顧.html#cb5-90" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">&quot;parsnip&quot;</span>)</span>
-<span id="cb5-91"><a href="重點回顧.html#cb5-91" tabindex="-1"></a></span>
-<span id="cb5-92"><a href="重點回顧.html#cb5-92" tabindex="-1"></a><span class="co"># 建立工作流程</span></span>
-<span id="cb5-93"><a href="重點回顧.html#cb5-93" tabindex="-1"></a>lasso_workflow <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb5-94"><a href="重點回顧.html#cb5-94" tabindex="-1"></a>  <span class="fu">add_recipe</span>(ml_recipe) <span class="sc">%&gt;%</span></span>
-<span id="cb5-95"><a href="重點回顧.html#cb5-95" tabindex="-1"></a>  <span class="fu">add_model</span>(lasso_spec)</span>
-<span id="cb5-96"><a href="重點回顧.html#cb5-96" tabindex="-1"></a></span>
-<span id="cb5-97"><a href="重點回顧.html#cb5-97" tabindex="-1"></a>svm_workflow <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb5-98"><a href="重點回顧.html#cb5-98" tabindex="-1"></a>  <span class="fu">add_recipe</span>(ml_recipe) <span class="sc">%&gt;%</span></span>
-<span id="cb5-99"><a href="重點回顧.html#cb5-99" tabindex="-1"></a>  <span class="fu">add_model</span>(svm_spec)</span>
-<span id="cb5-100"><a href="重點回顧.html#cb5-100" tabindex="-1"></a></span>
-<span id="cb5-101"><a href="重點回顧.html#cb5-101" tabindex="-1"></a>null_workflow <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb5-102"><a href="重點回顧.html#cb5-102" tabindex="-1"></a>  <span class="fu">add_recipe</span>(ml_recipe) <span class="sc">%&gt;%</span></span>
-<span id="cb5-103"><a href="重點回顧.html#cb5-103" tabindex="-1"></a>  <span class="fu">add_model</span>(null_spec)</span>
-<span id="cb5-104"><a href="重點回顧.html#cb5-104" tabindex="-1"></a></span>
-<span id="cb5-105"><a href="重點回顧.html#cb5-105" tabindex="-1"></a><span class="co"># 訓練模型</span></span>
-<span id="cb5-106"><a href="重點回顧.html#cb5-106" tabindex="-1"></a>final_lasso_fit <span class="ot">&lt;-</span> <span class="fu">fit</span>(lasso_workflow, <span class="at">data =</span> train_data)</span>
-<span id="cb5-107"><a href="重點回顧.html#cb5-107" tabindex="-1"></a>final_svm_fit <span class="ot">&lt;-</span> <span class="fu">fit</span>(svm_workflow, <span class="at">data =</span> train_data)</span>
-<span id="cb5-108"><a href="重點回顧.html#cb5-108" tabindex="-1"></a>final_null_fit <span class="ot">&lt;-</span> <span class="fu">fit</span>(null_workflow, <span class="at">data =</span> train_data)</span>
-<span id="cb5-109"><a href="重點回顧.html#cb5-109" tabindex="-1"></a></span>
-<span id="cb5-110"><a href="重點回顧.html#cb5-110" tabindex="-1"></a><span class="co"># 預測與評估</span></span>
-<span id="cb5-111"><a href="重點回顧.html#cb5-111" tabindex="-1"></a></span>
-<span id="cb5-112"><a href="重點回顧.html#cb5-112" tabindex="-1"></a><span class="co"># 定義評估指標</span></span>
-<span id="cb5-113"><a href="重點回顧.html#cb5-113" tabindex="-1"></a>eval_metrics <span class="ot">&lt;-</span> <span class="fu">metric_set</span>(accuracy, kap, roc_auc)</span>
-<span id="cb5-114"><a href="重點回顧.html#cb5-114" tabindex="-1"></a></span>
-<span id="cb5-115"><a href="重點回顧.html#cb5-115" tabindex="-1"></a><span class="co"># LASSO 模型評估</span></span>
-<span id="cb5-116"><a href="重點回顧.html#cb5-116" tabindex="-1"></a>lasso_predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(final_lasso_fit, test_data, <span class="at">type =</span> <span class="st">&quot;prob&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb5-117"><a href="重點回顧.html#cb5-117" tabindex="-1"></a>  <span class="fu">bind_cols</span>(<span class="fu">predict</span>(final_lasso_fit, test_data)) <span class="sc">%&gt;%</span></span>
-<span id="cb5-118"><a href="重點回顧.html#cb5-118" tabindex="-1"></a>  <span class="fu">bind_cols</span>(test_data <span class="sc">%&gt;%</span> <span class="fu">select</span>(views_category))</span>
-<span id="cb5-119"><a href="重點回顧.html#cb5-119" tabindex="-1"></a></span>
-<span id="cb5-120"><a href="重點回顧.html#cb5-120" tabindex="-1"></a>lasso_metrics <span class="ot">&lt;-</span> lasso_predictions <span class="sc">%&gt;%</span></span>
-<span id="cb5-121"><a href="重點回顧.html#cb5-121" tabindex="-1"></a>  <span class="fu">eval_metrics</span>(<span class="at">truth =</span> views_category, <span class="at">estimate =</span> .pred_class)</span>
-<span id="cb5-122"><a href="重點回顧.html#cb5-122" tabindex="-1"></a></span>
-<span id="cb5-123"><a href="重點回顧.html#cb5-123" tabindex="-1"></a><span class="fu">print</span>(<span class="st">&quot;LASSO 模型評估結果：&quot;</span>)</span>
-<span id="cb5-124"><a href="重點回顧.html#cb5-124" tabindex="-1"></a><span class="fu">print</span>(lasso_metrics)</span>
-<span id="cb5-125"><a href="重點回顧.html#cb5-125" tabindex="-1"></a></span>
-<span id="cb5-126"><a href="重點回顧.html#cb5-126" tabindex="-1"></a><span class="co"># SVM 模型評估</span></span>
-<span id="cb5-127"><a href="重點回顧.html#cb5-127" tabindex="-1"></a>svm_predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(final_svm_fit, test_data, <span class="at">type =</span> <span class="st">&quot;prob&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb5-128"><a href="重點回顧.html#cb5-128" tabindex="-1"></a>  <span class="fu">bind_cols</span>(<span class="fu">predict</span>(final_svm_fit, test_data)) <span class="sc">%&gt;%</span></span>
-<span id="cb5-129"><a href="重點回顧.html#cb5-129" tabindex="-1"></a>  <span class="fu">bind_cols</span>(test_data <span class="sc">%&gt;%</span> <span class="fu">select</span>(views_category))</span>
-<span id="cb5-130"><a href="重點回顧.html#cb5-130" tabindex="-1"></a></span>
-<span id="cb5-131"><a href="重點回顧.html#cb5-131" tabindex="-1"></a>svm_metrics <span class="ot">&lt;-</span> svm_predictions <span class="sc">%&gt;%</span></span>
-<span id="cb5-132"><a href="重點回顧.html#cb5-132" tabindex="-1"></a>  <span class="fu">eval_metrics</span>(<span class="at">truth =</span> views_category, <span class="at">estimate =</span> .pred_class)</span>
-<span id="cb5-133"><a href="重點回顧.html#cb5-133" tabindex="-1"></a></span>
-<span id="cb5-134"><a href="重點回顧.html#cb5-134" tabindex="-1"></a><span class="fu">print</span>(<span class="st">&quot;SVM 模型評估結果：&quot;</span>)</span>
-<span id="cb5-135"><a href="重點回顧.html#cb5-135" tabindex="-1"></a><span class="fu">print</span>(svm_metrics)</span>
-<span id="cb5-136"><a href="重點回顧.html#cb5-136" tabindex="-1"></a></span>
-<span id="cb5-137"><a href="重點回顧.html#cb5-137" tabindex="-1"></a><span class="co"># Null 模型評估</span></span>
-<span id="cb5-138"><a href="重點回顧.html#cb5-138" tabindex="-1"></a>null_predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(final_null_fit, test_data) <span class="sc">%&gt;%</span></span>
-<span id="cb5-139"><a href="重點回顧.html#cb5-139" tabindex="-1"></a>  <span class="fu">bind_cols</span>(test_data <span class="sc">%&gt;%</span> <span class="fu">select</span>(views_category))</span>
-<span id="cb5-140"><a href="重點回顧.html#cb5-140" tabindex="-1"></a></span>
-<span id="cb5-141"><a href="重點回顧.html#cb5-141" tabindex="-1"></a>null_metrics <span class="ot">&lt;-</span> null_predictions <span class="sc">%&gt;%</span></span>
-<span id="cb5-142"><a href="重點回顧.html#cb5-142" tabindex="-1"></a>  <span class="fu">eval_metrics</span>(<span class="at">truth =</span> views_category, <span class="at">estimate =</span> .pred_class)</span>
-<span id="cb5-143"><a href="重點回顧.html#cb5-143" tabindex="-1"></a></span>
-<span id="cb5-144"><a href="重點回顧.html#cb5-144" tabindex="-1"></a><span class="fu">print</span>(<span class="st">&quot;Null 模型評估結果：&quot;</span>)</span>
-<span id="cb5-145"><a href="重點回顧.html#cb5-145" tabindex="-1"></a><span class="fu">print</span>(null_metrics)</span>
-<span id="cb5-146"><a href="重點回顧.html#cb5-146" tabindex="-1"></a></span>
-<span id="cb5-147"><a href="重點回顧.html#cb5-147" tabindex="-1"></a><span class="co"># 合併所有模型的評估結果</span></span>
-<span id="cb5-148"><a href="重點回顧.html#cb5-148" tabindex="-1"></a>all_metrics <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(</span>
-<span id="cb5-149"><a href="重點回顧.html#cb5-149" tabindex="-1"></a>  lasso_metrics <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">&quot;LASSO&quot;</span>),</span>
-<span id="cb5-150"><a href="重點回顧.html#cb5-150" tabindex="-1"></a>  svm_metrics <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">&quot;SVM&quot;</span>),</span>
-<span id="cb5-151"><a href="重點回顧.html#cb5-151" tabindex="-1"></a>  null_metrics <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">&quot;Null Model&quot;</span>)</span>
-<span id="cb5-152"><a href="重點回顧.html#cb5-152" tabindex="-1"></a>)</span>
-<span id="cb5-153"><a href="重點回顧.html#cb5-153" tabindex="-1"></a></span>
-<span id="cb5-154"><a href="重點回顧.html#cb5-154" tabindex="-1"></a><span class="fu">print</span>(<span class="st">&quot;所有模型的評估結果：&quot;</span>)</span>
-<span id="cb5-155"><a href="重點回顧.html#cb5-155" tabindex="-1"></a><span class="fu">print</span>(all_metrics)</span></code></pre></div>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="重點回顧.html#cb50-1" tabindex="-1"></a><span class="do">#######################################################</span></span>
+<span id="cb50-2"><a href="重點回顧.html#cb50-2" tabindex="-1"></a><span class="do">## 長格式資料、不tune</span></span>
+<span id="cb50-3"><a href="重點回顧.html#cb50-3" tabindex="-1"></a><span class="do">#######################################################</span></span>
+<span id="cb50-4"><a href="重點回顧.html#cb50-4" tabindex="-1"></a></span>
+<span id="cb50-5"><a href="重點回顧.html#cb50-5" tabindex="-1"></a><span class="co"># 載入必要的套件</span></span>
+<span id="cb50-6"><a href="重點回顧.html#cb50-6" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb50-7"><a href="重點回顧.html#cb50-7" tabindex="-1"></a><span class="fu">library</span>(tidymodels)</span>
+<span id="cb50-8"><a href="重點回顧.html#cb50-8" tabindex="-1"></a><span class="fu">library</span>(textrecipes)</span>
+<span id="cb50-9"><a href="重點回顧.html#cb50-9" tabindex="-1"></a></span>
+<span id="cb50-10"><a href="重點回顧.html#cb50-10" tabindex="-1"></a><span class="co"># 假設您的資料已讀取，並命名為 data</span></span>
+<span id="cb50-11"><a href="重點回顧.html#cb50-11" tabindex="-1"></a><span class="co"># 資料包含以下欄位：line_id, word, views, timestamp, likes, n, tf, idf, tf_idf, timestamp_days</span></span>
+<span id="cb50-12"><a href="重點回顧.html#cb50-12" tabindex="-1"></a></span>
+<span id="cb50-13"><a href="重點回顧.html#cb50-13" tabindex="-1"></a><span class="co"># 定義觀看次數的區間和對應的分類</span></span>
+<span id="cb50-14"><a href="重點回顧.html#cb50-14" tabindex="-1"></a>recode_views <span class="ot">&lt;-</span> <span class="cf">function</span>(views) {</span>
+<span id="cb50-15"><a href="重點回顧.html#cb50-15" tabindex="-1"></a>  <span class="cf">if</span> (views <span class="sc">&gt;=</span> <span class="dv">500000</span> <span class="sc">&amp;</span> views <span class="sc">&lt;</span> <span class="dv">1000000</span>) {</span>
+<span id="cb50-16"><a href="重點回顧.html#cb50-16" tabindex="-1"></a>    <span class="fu">return</span>(<span class="dv">1</span>)</span>
+<span id="cb50-17"><a href="重點回顧.html#cb50-17" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (views <span class="sc">&gt;=</span> <span class="dv">1000000</span> <span class="sc">&amp;</span> views <span class="sc">&lt;</span> <span class="dv">2000000</span>) {</span>
+<span id="cb50-18"><a href="重點回顧.html#cb50-18" tabindex="-1"></a>    <span class="fu">return</span>(<span class="dv">2</span>)</span>
+<span id="cb50-19"><a href="重點回顧.html#cb50-19" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (views <span class="sc">&gt;=</span> <span class="dv">2000000</span> <span class="sc">&amp;</span> views <span class="sc">&lt;</span> <span class="dv">4000000</span>) {</span>
+<span id="cb50-20"><a href="重點回顧.html#cb50-20" tabindex="-1"></a>    <span class="fu">return</span>(<span class="dv">3</span>)</span>
+<span id="cb50-21"><a href="重點回顧.html#cb50-21" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (views <span class="sc">&gt;=</span> <span class="dv">4000000</span> <span class="sc">&amp;</span> views <span class="sc">&lt;</span> <span class="dv">5000000</span>) {</span>
+<span id="cb50-22"><a href="重點回顧.html#cb50-22" tabindex="-1"></a>    <span class="fu">return</span>(<span class="dv">4</span>)</span>
+<span id="cb50-23"><a href="重點回顧.html#cb50-23" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (views <span class="sc">&gt;=</span> <span class="dv">5000000</span> <span class="sc">&amp;</span> views <span class="sc">&lt;</span> <span class="dv">6000000</span>) {</span>
+<span id="cb50-24"><a href="重點回顧.html#cb50-24" tabindex="-1"></a>    <span class="fu">return</span>(<span class="dv">5</span>)</span>
+<span id="cb50-25"><a href="重點回顧.html#cb50-25" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (views <span class="sc">&gt;=</span> <span class="dv">7000000</span> <span class="sc">&amp;</span> views <span class="sc">&lt;</span> <span class="dv">8000000</span>) {</span>
+<span id="cb50-26"><a href="重點回顧.html#cb50-26" tabindex="-1"></a>    <span class="fu">return</span>(<span class="dv">6</span>)</span>
+<span id="cb50-27"><a href="重點回顧.html#cb50-27" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (views <span class="sc">&gt;=</span> <span class="dv">8000000</span> <span class="sc">&amp;</span> views <span class="sc">&lt;</span> <span class="dv">9000000</span>) {</span>
+<span id="cb50-28"><a href="重點回顧.html#cb50-28" tabindex="-1"></a>    <span class="fu">return</span>(<span class="dv">7</span>)</span>
+<span id="cb50-29"><a href="重點回顧.html#cb50-29" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (views <span class="sc">&gt;=</span> <span class="dv">9000000</span> <span class="sc">&amp;</span> views <span class="sc">&lt;</span> <span class="dv">10000000</span>) {</span>
+<span id="cb50-30"><a href="重點回顧.html#cb50-30" tabindex="-1"></a>    <span class="fu">return</span>(<span class="dv">8</span>)</span>
+<span id="cb50-31"><a href="重點回顧.html#cb50-31" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (views <span class="sc">&gt;=</span> <span class="dv">10000000</span> <span class="sc">&amp;</span> views <span class="sc">&lt;</span> <span class="dv">15000000</span>) {</span>
+<span id="cb50-32"><a href="重點回顧.html#cb50-32" tabindex="-1"></a>    <span class="fu">return</span>(<span class="dv">9</span>)</span>
+<span id="cb50-33"><a href="重點回顧.html#cb50-33" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (views <span class="sc">&gt;=</span> <span class="dv">15000000</span>) {</span>
+<span id="cb50-34"><a href="重點回顧.html#cb50-34" tabindex="-1"></a>    <span class="fu">return</span>(<span class="dv">10</span>)</span>
+<span id="cb50-35"><a href="重點回顧.html#cb50-35" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb50-36"><a href="重點回顧.html#cb50-36" tabindex="-1"></a>    <span class="fu">return</span>(<span class="cn">NA</span>)</span>
+<span id="cb50-37"><a href="重點回顧.html#cb50-37" tabindex="-1"></a>  }</span>
+<span id="cb50-38"><a href="重點回顧.html#cb50-38" tabindex="-1"></a>}</span>
+<span id="cb50-39"><a href="重點回顧.html#cb50-39" tabindex="-1"></a></span>
+<span id="cb50-40"><a href="重點回顧.html#cb50-40" tabindex="-1"></a><span class="co"># 應用編碼函數並移除缺失值</span></span>
+<span id="cb50-41"><a href="重點回顧.html#cb50-41" tabindex="-1"></a>data <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
+<span id="cb50-42"><a href="重點回顧.html#cb50-42" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">views_category =</span> <span class="fu">sapply</span>(views, recode_views)) <span class="sc">%&gt;%</span></span>
+<span id="cb50-43"><a href="重點回顧.html#cb50-43" tabindex="-1"></a>  <span class="fu">drop_na</span>(views_category) <span class="sc">%&gt;%</span></span>
+<span id="cb50-44"><a href="重點回顧.html#cb50-44" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">views_category =</span> <span class="fu">factor</span>(views_category))  <span class="co"># 將目標變數轉換為因子</span></span>
+<span id="cb50-45"><a href="重點回顧.html#cb50-45" tabindex="-1"></a></span>
+<span id="cb50-46"><a href="重點回顧.html#cb50-46" tabindex="-1"></a><span class="co"># 處理數值型特徵，將 likes 和 timestamp_days 轉換為數值型，並處理缺失值</span></span>
+<span id="cb50-47"><a href="重點回顧.html#cb50-47" tabindex="-1"></a>data <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
+<span id="cb50-48"><a href="重點回顧.html#cb50-48" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb50-49"><a href="重點回顧.html#cb50-49" tabindex="-1"></a>    <span class="at">likes =</span> <span class="fu">as.numeric</span>(likes),</span>
+<span id="cb50-50"><a href="重點回顧.html#cb50-50" tabindex="-1"></a>    <span class="at">likes =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(likes), <span class="dv">0</span>, likes),</span>
+<span id="cb50-51"><a href="重點回顧.html#cb50-51" tabindex="-1"></a>    <span class="at">timestamp_days =</span> <span class="fu">as.numeric</span>(timestamp_days),</span>
+<span id="cb50-52"><a href="重點回顧.html#cb50-52" tabindex="-1"></a>    <span class="at">timestamp_days =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(timestamp_days), <span class="dv">0</span>, timestamp_days)</span>
+<span id="cb50-53"><a href="重點回顧.html#cb50-53" tabindex="-1"></a>  )</span>
+<span id="cb50-54"><a href="重點回顧.html#cb50-54" tabindex="-1"></a></span>
+<span id="cb50-55"><a href="重點回顧.html#cb50-55" tabindex="-1"></a><span class="co"># 分割資料（確保每個 line_id 只出現在訓練或測試集之一）</span></span>
+<span id="cb50-56"><a href="重點回顧.html#cb50-56" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb50-57"><a href="重點回顧.html#cb50-57" tabindex="-1"></a>line_ids <span class="ot">&lt;-</span> <span class="fu">unique</span>(data<span class="sc">$</span>line_id)</span>
+<span id="cb50-58"><a href="重點回顧.html#cb50-58" tabindex="-1"></a>train_ids <span class="ot">&lt;-</span> <span class="fu">sample</span>(line_ids, <span class="at">size =</span> <span class="fl">0.7</span> <span class="sc">*</span> <span class="fu">length</span>(line_ids))</span>
+<span id="cb50-59"><a href="重點回顧.html#cb50-59" tabindex="-1"></a>train_data <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(line_id <span class="sc">%in%</span> train_ids)</span>
+<span id="cb50-60"><a href="重點回顧.html#cb50-60" tabindex="-1"></a>test_data <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="sc">!</span>line_id <span class="sc">%in%</span> train_ids)</span>
+<span id="cb50-61"><a href="重點回顧.html#cb50-61" tabindex="-1"></a></span>
+<span id="cb50-62"><a href="重點回顧.html#cb50-62" tabindex="-1"></a>train_data <span class="ot">&lt;-</span> train_data <span class="sc">%&gt;%</span></span>
+<span id="cb50-63"><a href="重點回顧.html#cb50-63" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(tf, idf, timestamp, views))</span>
+<span id="cb50-64"><a href="重點回顧.html#cb50-64" tabindex="-1"></a></span>
+<span id="cb50-65"><a href="重點回顧.html#cb50-65" tabindex="-1"></a></span>
+<span id="cb50-66"><a href="重點回顧.html#cb50-66" tabindex="-1"></a>ml_recipe <span class="ot">&lt;-</span> <span class="fu">recipe</span>(views_category <span class="sc">~</span> word , <span class="at">data =</span> train_data) <span class="sc">%&gt;%</span></span>
+<span id="cb50-67"><a href="重點回顧.html#cb50-67" tabindex="-1"></a>  <span class="fu">step_dummy</span>(<span class="fu">all_nominal_predictors</span>(), <span class="sc">-</span><span class="fu">all_outcomes</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb50-68"><a href="重點回顧.html#cb50-68" tabindex="-1"></a>  <span class="fu">step_normalize</span>(<span class="fu">all_numeric_predictors</span>())</span>
+<span id="cb50-69"><a href="重點回顧.html#cb50-69" tabindex="-1"></a></span>
+<span id="cb50-70"><a href="重點回顧.html#cb50-70" tabindex="-1"></a></span>
+<span id="cb50-71"><a href="重點回顧.html#cb50-71" tabindex="-1"></a>ml_recipe <span class="ot">&lt;-</span> <span class="fu">recipe</span>(views_category <span class="sc">~</span> word <span class="sc">+</span> tf_idf , <span class="at">data =</span> train_data) <span class="sc">%&gt;%</span></span>
+<span id="cb50-72"><a href="重點回顧.html#cb50-72" tabindex="-1"></a>  <span class="co"># 移除不必要的欄位（若有）</span></span>
+<span id="cb50-73"><a href="重點回顧.html#cb50-73" tabindex="-1"></a>  <span class="fu">step_other</span>(word, <span class="at">threshold =</span> <span class="fl">0.01</span>) <span class="sc">%&gt;%</span>       <span class="co"># 將出現頻率低於1%的詞彙歸類為 &quot;other&quot;</span></span>
+<span id="cb50-74"><a href="重點回顧.html#cb50-74" tabindex="-1"></a>  <span class="fu">step_dummy</span>(word) <span class="sc">%&gt;%</span>                         <span class="co"># 將 &#39;word&#39; 轉換為虛擬變數</span></span>
+<span id="cb50-75"><a href="重點回顧.html#cb50-75" tabindex="-1"></a>  <span class="fu">step_normalize</span>(<span class="fu">all_numeric_predictors</span>())    <span class="co"># 標準化數值型預測變數</span></span>
+<span id="cb50-76"><a href="重點回顧.html#cb50-76" tabindex="-1"></a></span>
+<span id="cb50-77"><a href="重點回顧.html#cb50-77" tabindex="-1"></a><span class="co"># 檢查配方是否正確</span></span>
+<span id="cb50-78"><a href="重點回顧.html#cb50-78" tabindex="-1"></a><span class="fu">prep</span>(ml_recipe, <span class="at">training =</span> train_data) <span class="sc">%&gt;%</span> <span class="fu">juice</span>() <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span>
+<span id="cb50-79"><a href="重點回顧.html#cb50-79" tabindex="-1"></a></span>
+<span id="cb50-80"><a href="重點回顧.html#cb50-80" tabindex="-1"></a><span class="co"># 建立模型規格（未調參）</span></span>
+<span id="cb50-81"><a href="重點回顧.html#cb50-81" tabindex="-1"></a>lasso_spec <span class="ot">&lt;-</span> <span class="fu">multinom_reg</span>(<span class="at">penalty =</span> <span class="fl">0.1</span>, <span class="at">mixture =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span>  <span class="co"># LASSO 邏輯回歸</span></span>
+<span id="cb50-82"><a href="重點回顧.html#cb50-82" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">&quot;glmnet&quot;</span>)</span>
+<span id="cb50-83"><a href="重點回顧.html#cb50-83" tabindex="-1"></a></span>
+<span id="cb50-84"><a href="重點回顧.html#cb50-84" tabindex="-1"></a>svm_spec <span class="ot">&lt;-</span> <span class="fu">svm_linear</span>(<span class="at">cost =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span>                        <span class="co"># 線性 SVM</span></span>
+<span id="cb50-85"><a href="重點回顧.html#cb50-85" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">&quot;classification&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb50-86"><a href="重點回顧.html#cb50-86" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">&quot;LiblineaR&quot;</span>)</span>
+<span id="cb50-87"><a href="重點回顧.html#cb50-87" tabindex="-1"></a></span>
+<span id="cb50-88"><a href="重點回顧.html#cb50-88" tabindex="-1"></a>null_spec <span class="ot">&lt;-</span> <span class="fu">null_model</span>() <span class="sc">%&gt;%</span>                               <span class="co"># Null 模型</span></span>
+<span id="cb50-89"><a href="重點回顧.html#cb50-89" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">&quot;classification&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb50-90"><a href="重點回顧.html#cb50-90" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">&quot;parsnip&quot;</span>)</span>
+<span id="cb50-91"><a href="重點回顧.html#cb50-91" tabindex="-1"></a></span>
+<span id="cb50-92"><a href="重點回顧.html#cb50-92" tabindex="-1"></a><span class="co"># 建立工作流程</span></span>
+<span id="cb50-93"><a href="重點回顧.html#cb50-93" tabindex="-1"></a>lasso_workflow <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb50-94"><a href="重點回顧.html#cb50-94" tabindex="-1"></a>  <span class="fu">add_recipe</span>(ml_recipe) <span class="sc">%&gt;%</span></span>
+<span id="cb50-95"><a href="重點回顧.html#cb50-95" tabindex="-1"></a>  <span class="fu">add_model</span>(lasso_spec)</span>
+<span id="cb50-96"><a href="重點回顧.html#cb50-96" tabindex="-1"></a></span>
+<span id="cb50-97"><a href="重點回顧.html#cb50-97" tabindex="-1"></a>svm_workflow <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb50-98"><a href="重點回顧.html#cb50-98" tabindex="-1"></a>  <span class="fu">add_recipe</span>(ml_recipe) <span class="sc">%&gt;%</span></span>
+<span id="cb50-99"><a href="重點回顧.html#cb50-99" tabindex="-1"></a>  <span class="fu">add_model</span>(svm_spec)</span>
+<span id="cb50-100"><a href="重點回顧.html#cb50-100" tabindex="-1"></a></span>
+<span id="cb50-101"><a href="重點回顧.html#cb50-101" tabindex="-1"></a>null_workflow <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb50-102"><a href="重點回顧.html#cb50-102" tabindex="-1"></a>  <span class="fu">add_recipe</span>(ml_recipe) <span class="sc">%&gt;%</span></span>
+<span id="cb50-103"><a href="重點回顧.html#cb50-103" tabindex="-1"></a>  <span class="fu">add_model</span>(null_spec)</span>
+<span id="cb50-104"><a href="重點回顧.html#cb50-104" tabindex="-1"></a></span>
+<span id="cb50-105"><a href="重點回顧.html#cb50-105" tabindex="-1"></a><span class="co"># 訓練模型</span></span>
+<span id="cb50-106"><a href="重點回顧.html#cb50-106" tabindex="-1"></a>final_lasso_fit <span class="ot">&lt;-</span> <span class="fu">fit</span>(lasso_workflow, <span class="at">data =</span> train_data)</span>
+<span id="cb50-107"><a href="重點回顧.html#cb50-107" tabindex="-1"></a>final_svm_fit <span class="ot">&lt;-</span> <span class="fu">fit</span>(svm_workflow, <span class="at">data =</span> train_data)</span>
+<span id="cb50-108"><a href="重點回顧.html#cb50-108" tabindex="-1"></a>final_null_fit <span class="ot">&lt;-</span> <span class="fu">fit</span>(null_workflow, <span class="at">data =</span> train_data)</span>
+<span id="cb50-109"><a href="重點回顧.html#cb50-109" tabindex="-1"></a></span>
+<span id="cb50-110"><a href="重點回顧.html#cb50-110" tabindex="-1"></a><span class="co"># 預測與評估</span></span>
+<span id="cb50-111"><a href="重點回顧.html#cb50-111" tabindex="-1"></a></span>
+<span id="cb50-112"><a href="重點回顧.html#cb50-112" tabindex="-1"></a><span class="co"># 定義評估指標</span></span>
+<span id="cb50-113"><a href="重點回顧.html#cb50-113" tabindex="-1"></a>eval_metrics <span class="ot">&lt;-</span> <span class="fu">metric_set</span>(accuracy, kap, roc_auc)</span>
+<span id="cb50-114"><a href="重點回顧.html#cb50-114" tabindex="-1"></a></span>
+<span id="cb50-115"><a href="重點回顧.html#cb50-115" tabindex="-1"></a><span class="co"># LASSO 模型評估</span></span>
+<span id="cb50-116"><a href="重點回顧.html#cb50-116" tabindex="-1"></a>lasso_predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(final_lasso_fit, test_data, <span class="at">type =</span> <span class="st">&quot;prob&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb50-117"><a href="重點回顧.html#cb50-117" tabindex="-1"></a>  <span class="fu">bind_cols</span>(<span class="fu">predict</span>(final_lasso_fit, test_data)) <span class="sc">%&gt;%</span></span>
+<span id="cb50-118"><a href="重點回顧.html#cb50-118" tabindex="-1"></a>  <span class="fu">bind_cols</span>(test_data <span class="sc">%&gt;%</span> <span class="fu">select</span>(views_category))</span>
+<span id="cb50-119"><a href="重點回顧.html#cb50-119" tabindex="-1"></a></span>
+<span id="cb50-120"><a href="重點回顧.html#cb50-120" tabindex="-1"></a>lasso_metrics <span class="ot">&lt;-</span> lasso_predictions <span class="sc">%&gt;%</span></span>
+<span id="cb50-121"><a href="重點回顧.html#cb50-121" tabindex="-1"></a>  <span class="fu">eval_metrics</span>(<span class="at">truth =</span> views_category, <span class="at">estimate =</span> .pred_class)</span>
+<span id="cb50-122"><a href="重點回顧.html#cb50-122" tabindex="-1"></a></span>
+<span id="cb50-123"><a href="重點回顧.html#cb50-123" tabindex="-1"></a><span class="fu">print</span>(<span class="st">&quot;LASSO 模型評估結果：&quot;</span>)</span>
+<span id="cb50-124"><a href="重點回顧.html#cb50-124" tabindex="-1"></a><span class="fu">print</span>(lasso_metrics)</span>
+<span id="cb50-125"><a href="重點回顧.html#cb50-125" tabindex="-1"></a></span>
+<span id="cb50-126"><a href="重點回顧.html#cb50-126" tabindex="-1"></a><span class="co"># SVM 模型評估</span></span>
+<span id="cb50-127"><a href="重點回顧.html#cb50-127" tabindex="-1"></a>svm_predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(final_svm_fit, test_data, <span class="at">type =</span> <span class="st">&quot;prob&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb50-128"><a href="重點回顧.html#cb50-128" tabindex="-1"></a>  <span class="fu">bind_cols</span>(<span class="fu">predict</span>(final_svm_fit, test_data)) <span class="sc">%&gt;%</span></span>
+<span id="cb50-129"><a href="重點回顧.html#cb50-129" tabindex="-1"></a>  <span class="fu">bind_cols</span>(test_data <span class="sc">%&gt;%</span> <span class="fu">select</span>(views_category))</span>
+<span id="cb50-130"><a href="重點回顧.html#cb50-130" tabindex="-1"></a></span>
+<span id="cb50-131"><a href="重點回顧.html#cb50-131" tabindex="-1"></a>svm_metrics <span class="ot">&lt;-</span> svm_predictions <span class="sc">%&gt;%</span></span>
+<span id="cb50-132"><a href="重點回顧.html#cb50-132" tabindex="-1"></a>  <span class="fu">eval_metrics</span>(<span class="at">truth =</span> views_category, <span class="at">estimate =</span> .pred_class)</span>
+<span id="cb50-133"><a href="重點回顧.html#cb50-133" tabindex="-1"></a></span>
+<span id="cb50-134"><a href="重點回顧.html#cb50-134" tabindex="-1"></a><span class="fu">print</span>(<span class="st">&quot;SVM 模型評估結果：&quot;</span>)</span>
+<span id="cb50-135"><a href="重點回顧.html#cb50-135" tabindex="-1"></a><span class="fu">print</span>(svm_metrics)</span>
+<span id="cb50-136"><a href="重點回顧.html#cb50-136" tabindex="-1"></a></span>
+<span id="cb50-137"><a href="重點回顧.html#cb50-137" tabindex="-1"></a><span class="co"># Null 模型評估</span></span>
+<span id="cb50-138"><a href="重點回顧.html#cb50-138" tabindex="-1"></a>null_predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(final_null_fit, test_data) <span class="sc">%&gt;%</span></span>
+<span id="cb50-139"><a href="重點回顧.html#cb50-139" tabindex="-1"></a>  <span class="fu">bind_cols</span>(test_data <span class="sc">%&gt;%</span> <span class="fu">select</span>(views_category))</span>
+<span id="cb50-140"><a href="重點回顧.html#cb50-140" tabindex="-1"></a></span>
+<span id="cb50-141"><a href="重點回顧.html#cb50-141" tabindex="-1"></a>null_metrics <span class="ot">&lt;-</span> null_predictions <span class="sc">%&gt;%</span></span>
+<span id="cb50-142"><a href="重點回顧.html#cb50-142" tabindex="-1"></a>  <span class="fu">eval_metrics</span>(<span class="at">truth =</span> views_category, <span class="at">estimate =</span> .pred_class)</span>
+<span id="cb50-143"><a href="重點回顧.html#cb50-143" tabindex="-1"></a></span>
+<span id="cb50-144"><a href="重點回顧.html#cb50-144" tabindex="-1"></a><span class="fu">print</span>(<span class="st">&quot;Null 模型評估結果：&quot;</span>)</span>
+<span id="cb50-145"><a href="重點回顧.html#cb50-145" tabindex="-1"></a><span class="fu">print</span>(null_metrics)</span>
+<span id="cb50-146"><a href="重點回顧.html#cb50-146" tabindex="-1"></a></span>
+<span id="cb50-147"><a href="重點回顧.html#cb50-147" tabindex="-1"></a><span class="co"># 合併所有模型的評估結果</span></span>
+<span id="cb50-148"><a href="重點回顧.html#cb50-148" tabindex="-1"></a>all_metrics <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(</span>
+<span id="cb50-149"><a href="重點回顧.html#cb50-149" tabindex="-1"></a>  lasso_metrics <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">&quot;LASSO&quot;</span>),</span>
+<span id="cb50-150"><a href="重點回顧.html#cb50-150" tabindex="-1"></a>  svm_metrics <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">&quot;SVM&quot;</span>),</span>
+<span id="cb50-151"><a href="重點回顧.html#cb50-151" tabindex="-1"></a>  null_metrics <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">&quot;Null Model&quot;</span>)</span>
+<span id="cb50-152"><a href="重點回顧.html#cb50-152" tabindex="-1"></a>)</span>
+<span id="cb50-153"><a href="重點回顧.html#cb50-153" tabindex="-1"></a></span>
+<span id="cb50-154"><a href="重點回顧.html#cb50-154" tabindex="-1"></a><span class="fu">print</span>(<span class="st">&quot;所有模型的評估結果：&quot;</span>)</span>
+<span id="cb50-155"><a href="重點回顧.html#cb50-155" tabindex="-1"></a><span class="fu">print</span>(all_metrics)</span></code></pre></div>
 
 </div>
 </div>

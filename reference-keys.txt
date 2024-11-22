@@ -1,3 +1,6 @@
+tab:unnamed-chunk-3
+tab:unnamed-chunk-5
+tab:unnamed-chunk-7
 about-this-project
 研究背景與目的
 研究方法
@@ -24,10 +27,6 @@ case-2-情感分析
 case-3-主題模型
 case-4-詞性標注
 next-step
-tab:unnamed-chunk-3
-tab:unnamed-chunk-5
-tab:unnamed-chunk-7
-next-step-1
 重點回顧
 刪除非英文評論
 文本重清理
