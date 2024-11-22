@@ -30,6 +30,9 @@ next-step
 重點回顧
 刪除非英文評論
 文本重清理
+case-1-詞頻文字雲-1
+case-2-情感分析-1
+case-3-主題模型-1
 變數修正時間按讚數
 轉換寬格式的必要
 ml-model-selection
